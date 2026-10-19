@@ -1,0 +1,12 @@
+id,name,provider,url,years,resolution,coverage,license,reliability(H/M/L),limitation,used_for
+D-01,Hansen Global Forest Change (qua workbook thống kê GFW),UMD GLAD / WRI,SRC-008; SRC-009,2001–2025,30 m (tổng hợp theo huyện),Toàn cầu; 15 huyện cũ Đắk Lắk,[Unverified] CC BY 4.0,M,"Đo mất cây che phủ (cây > 5 m, kể cả cây trồng), không đo phá rừng; ngưỡng tán 30%",S9 mất cây che phủ theo huyện; chỉ số sàng lọc
+D-02,Nguyên nhân mất cây che phủ (Sims et al. 2025),WRI,SRC-010,2001–2025,1 km,Toàn cầu; theo huyện,Open access,M,Gán một nguyên nhân chủ đạo cho mỗi ô 1 km; không tách được cà phê và cây ăn quả,S9 chỉ số v0 (mất do nông nghiệp)
+D-03,JRC Global Forest Cover 2020 (GFC2020 V3),EC JRC,SRC-011,2020,10 m,Toàn cầu,[Unverified] CC BY 4.0,M,"Tham khảo, không ràng buộc pháp lý; có danh sách lỗi đã biết",Mốc rừng 31/12/2020 trong BR chấm rủi ro lô; T8.1
+D-04,JRC Tropical Moist Forest (TMF),EC JRC,SRC-012,1990–2024 [Unverified],30 m,Rừng ẩm nhiệt đới,[Unverified],M,Chỉ rừng ẩm; định nghĩa khác Hansen,T8.1 so nguồn
+D-05,Niên giám thống kê tỉnh Đắk Lắk — diện tích cà phê theo huyện,Thống kê tỉnh Đắk Lắk,— (chưa có bản điện tử),≤ 2024,Huyện,15 huyện cũ,Văn bản nhà nước,H,Chưa lấy được; số rời từ báo chí chỉ có 2 huyện,Chỉ số v1; giá trị bị đe dọa
+D-06,UN Comtrade — VN xuất khẩu HS 0901,UNSD,SRC-013,2021–2023,Quốc gia × đối tác,VN → 27 nước EU,UN Comtrade terms,M,"VN chưa báo cáo 2024–2025; khối lượng 2023 thấp hơn số Hải quan VN [Inference, cần đối chiếu]",Giá trị bị đe dọa; business case
+D-07,USDA FAS GAIN Vietnam Coffee Annual,USDA FAS,SRC-014; SRC-015,2026/27 (dự báo),Quốc gia,Việt Nam,Public domain,M,Dự báo; chưa mở bản gốc,Bối cảnh; diện tích cả nước
+D-08,Diện tích/sản lượng cà phê Đắk Lắk (tỉnh),Sở Công Thương Đắk Lắk; báo chí,SRC-016; SRC-030,2023–2026,Tỉnh,Đắk Lắk,Văn bản nhà nước/báo chí,M,Năm số liệu không rõ; phạm vi tỉnh cũ/mới chưa rõ,ASM-03; ASM-21
+D-09,Ranh giới huyện — geoBoundaries ADM2,William & Mary geoLab (nguồn OCHA/Chính phủ VN),SRC-031,2020,Vector (đơn giản hóa),Việt Nam,CC BY 3.0 IGO,H,Ranh giới trước 01/7/2025,Bản đồ dashboard
+D-10,Ranh giới huyện — GADM 4.1,GADM,SRC-020,2022,Vector,Việt Nam,Học thuật; không phân phối lại,H,Không được công bố lại,Đối chiếu tên huyện với D-01 (không commit)
+D-11,Dữ liệu giả lập nông hộ/lô/giao dịch,Tự sinh (seed 2026),04-solution/S16-synthetic-data,—,Lô,~200 hộ / ~300 lô / ~1.000 giao dịch,CC BY 4.0 (dự án),L — SYNTHETIC,Không phản ánh DN thật; phân phối từ ASM-04/14/15,Prototype; UAT

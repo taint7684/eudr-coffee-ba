@@ -1,0 +1,4 @@
+year,world_usd,world_tonnes,eu27_usd,eu27_tonnes,eu27_share_value,eu27_partners,top5_eu,source
+2021,2155507661,1199632,980424887,546317,0.4548,24,Germany=399M; Italy=221M; Spain=122M; Belgium=112M; France=25M,"SRC-013 UN Comtrade, reporter=Viet Nam, HS 0901, flow=X"
+2022,2952034941,1393027,1428881177,675473,0.484,22,Germany=459M; Italy=292M; Belgium=257M; Spain=202M; Netherlands=65M,"SRC-013 UN Comtrade, reporter=Viet Nam, HS 0901, flow=X"
+2023,3183873274,1077072,1407348926,490382,0.442,23,Germany=442M; Italy=321M; Spain=222M; Belgium=144M; Netherlands=109M,"SRC-013 UN Comtrade, reporter=Viet Nam, HS 0901, flow=X"

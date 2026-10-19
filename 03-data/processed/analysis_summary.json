@@ -1,0 +1,59 @@
+{
+  "method": "v0 = minmax(agri_loss_2021_plus_ha) (cho du dien tich ca phe de chuyen v1)",
+  "thresholds": {
+    "tertile_low_mid": 0.105,
+    "tertile_mid_high": 0.42
+  },
+  "loss_2021_plus_total_ha": 15873,
+  "agri_loss_2021_plus_total_ha": 8689,
+  "pareto": {
+    "districts_for_80pct": 5,
+    "of": 15,
+    "share_districts": 0.333,
+    "top": [
+      "M'Đrắk",
+      "Krông Bông",
+      "Cư M'gar",
+      "Lắk",
+      "Ea Kar"
+    ]
+  },
+  "high_risk_districts": [
+    "M'Đrắk",
+    "Krông Bông",
+    "Cư M'gar",
+    "Lắk",
+    "Ea H'leo"
+  ],
+  "eu27_export_usd": {
+    "min": 980424887,
+    "likely": 1407348926,
+    "max": 1428881177
+  },
+  "value_at_risk_usd": {
+    "data_gap_lens": {
+      "min": 245106222,
+      "likely": 408131189,
+      "max": 471530788
+    },
+    "deforestation_screening_lens": {
+      "min": 49021244,
+      "likely": 142845916,
+      "max": 235765394
+    },
+    "assumptions": {
+      "ASM-21 Dak Lak share": {
+        "min": 0.25,
+        "likely": 0.29,
+        "max": 0.33
+      },
+      "ASM-22 share in high-risk districts": {
+        "min": 0.2,
+        "likely": 0.35,
+        "max": 0.5
+      }
+    }
+  },
+  "years": "2021-2025",
+  "threshold_canopy_pct": 30
+}

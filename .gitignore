@@ -1,0 +1,8 @@
+# Du lieu tho / van ban ben thu ba: khong commit (ROADMAP 2.2). Tai lai bang lenh trong README tung thu muc.
+03-data/raw/
+02-regulatory/raw/*.html
+02-regulatory/raw/*.txt
+*.pdf
+__pycache__/
+.ipynb_checkpoints/
+.DS_Store
