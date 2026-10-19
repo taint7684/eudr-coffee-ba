@@ -67,7 +67,7 @@ def main():
             "loss_trend_pct": round(int(r["loss_2021_plus_ha"]) / int(r["loss_2016_2020_ha"]) - 1, 3),
             "coffee_ha": int(c) if c else "",
             "coffee_status": coffee[d]["status"],
-            "loss_ratio": round(int(r["loss_2021_plus_ha"]) / int(c), 4) if c else "",
+            "loss_ratio": round(int(r["loss_2021_plus_ha"]) / int(c), 4) if c and int(c) > 0 else "",
         })
 
     full_coffee = all(r["coffee_ha"] != "" for r in rows)
@@ -104,7 +104,11 @@ def main():
     eu = [int(r["eu27_usd"]) for r in exports]
     eu_rng = {"min": min(eu), "likely": int(exports[-1]["eu27_usd"]), "max": max(eu)}
     data_gap = {k: round(eu_rng[k] * DL_SHARE[k]) for k in eu_rng}
-    defor = {k: round(data_gap[k] * HIGH_SHARE[k]) for k in eu_rng}
+    hs = dict(HIGH_SHARE)
+    if full_coffee:  # thay ASM-22 bang ty trong dien tich ca phe that o huyen rui ro Cao (SRC-033)
+        share = sum(r["coffee_ha"] for r in rows if r["risk_level"] == "Cao") / sum(r["coffee_ha"] for r in rows)
+        hs = {"min": round(share, 3), "likely": round(share, 3), "max": round(share, 3)}
+    defor = {k: round(data_gap[k] * hs[k]) for k in eu_rng}
 
     summary = {
         "method": method,
@@ -114,11 +118,12 @@ def main():
         "pareto": {"districts_for_80pct": n80, "of": len(rows), "share_districts": round(n80 / len(rows), 3),
                    "top": [r["district"] for r in rows[:n80]]},
         "high_risk_districts": [r["district"] for r in rows if r["risk_level"] == "Cao"],
+        "coffee_share_high_risk": hs["likely"] if full_coffee else None,
         "eu27_export_usd": eu_rng,
         "value_at_risk_usd": {
             "data_gap_lens": data_gap,
             "deforestation_screening_lens": defor,
-            "assumptions": {"ASM-21 Dak Lak share": DL_SHARE, "ASM-22 share in high-risk districts": HIGH_SHARE},
+            "assumptions": {"ASM-21 Dak Lak share": DL_SHARE, "share in high-risk districts": hs},
         },
         "years": f"2021-{loss[0]['last_year']}",
         "threshold_canopy_pct": 30,

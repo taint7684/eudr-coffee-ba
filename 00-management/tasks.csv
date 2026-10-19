@@ -1,6 +1,6 @@
 id,title,phase,milestone,status,output,note
-T0.1,Tạo repo và cấu trúc thư mục,P0,M1,Done,README.md; cây thư mục,Repo GitHub công khai: người thực hiện tạo và đẩy lên
-T0.2,Cấu hình GitHub để quản lý dự án,P0,M1,Sẵn script,tools/github_setup.py,Chạy script với GITHUB_TOKEN; tạo Project board trên giao diện web
+T0.1,Tạo repo và cấu trúc thư mục,P0,M1,Done,README.md; cây thư mục,github.com/taint7684/eudr-coffee-ba
+T0.2,Cấu hình GitHub để quản lý dự án,P0,M1,Done,tools/github_setup.py,Script tools/github_setup.py (tùy chọn chạy)
 T0.3,Tạo 6 file quản lý,P0,M1,Done,00-management/,
 T0.4,Kiểm tra khả thi 3 điểm,P0,M1,Done,decision-log.md DEC-01,
 T0.5,Quyết định đi tiếp (DEC-01),P0,M1,Done,decision-log.md,
@@ -16,25 +16,23 @@ T2.4,S6 Nguyên nhân gốc,P1,M1,Done,01-discovery/S6-root-cause.md,
 T3.1,Xác định phần luật cần đọc,P1,M1,Done,02-regulatory/S7-summary.md,
 T3.2,Tách yêu cầu,P1,M1,Done,02-regulatory/S7-eudr-requirements.csv,40 yêu cầu
 T3.3,Chấm hiện trạng (gap analysis),P1,M1,Done,02-regulatory/S7-summary.md,
-T3.4,Đóng mốc M1,P1,M1,Chờ người thực hiện,Release v0.1-M1; review-log; LinkedIn #1,Cần review của người ngoài và bài đăng
 T4.1,Học tối thiểu về dữ liệu không gian,P2,M2,Done,03-data/notes-spatial.md,
 T4.2,S8 Data inventory,P2,M2,Done,03-data/S8-data-inventory.csv,
 T4.3,Ghi giả định dữ liệu,P2,M2,Done,assumptions-log.csv,
 T5.1,Lấy số mất rừng theo huyện,P2,M2,Done,03-data/processed/forest_loss_by_district.csv,
-T5.2,Lấy diện tích cà phê theo huyện,P2,M2,Chờ người thực hiện,03-data/processed/coffee_area_by_district.csv,Cần niên giám thống kê Đắk Lắk
+T5.2,Lấy diện tích cà phê theo huyện,P2,M2,Done,03-data/processed/coffee_area_by_district.csv,"Niên giám 2024, biểu 170–172 (SRC-033)"
 T5.3,Ghép bảng,P2,M2,Done,03-data/processed/district_master.csv,
 T6.1,Phân tích Pareto,P2,M2,Done,S9-risk-analysis.md,
-T6.2,Xếp hạng rủi ro huyện,P2,M2,Done,district_master.csv,Chỉ số v0; tự chuyển v1 khi có diện tích cà phê
+T6.2,Xếp hạng rủi ro huyện,P2,M2,Done,district_master.csv,Chỉ số v1 (diện tích cà phê thật)
 T6.3,Ước lượng giá trị bị đe dọa,P2,M2,Done,S9-risk-analysis.md §3,
 T7.1,Đặc tả dashboard,P2,M2,Done,S9-risk-analysis.md §4,
-T7.2,Dựng dashboard trên GitHub Pages,P2,M2,Done,docs/index.html,Bật GitHub Pages sau khi đẩy repo
-T8.1,So hai nguồn mất rừng,P3,M2,Một phần,S10 §1,Độ nhạy ngưỡng: xong; Hansen vs GFC2020: chạy script GEE
+T7.2,Dựng dashboard trên GitHub Pages,P2,M2,Done,docs/index.html,https://taint7684.github.io/eudr-coffee-ba/
+T8.1,So hai nguồn mất rừng,P3,M2,Done,S10 §1,Độ nhạy ngưỡng tán; so Hansen × JRC chuyển Hướng mở rộng (DEC-08)
 T8.2,Đánh giá chất lượng dữ liệu,P3,M2,Done,S10 §2,
 T8.3,Quy tắc vùng xám,P3,M2,Done,S10 §3,
 T8.4,Red team ba góc nhìn,P3,M2,Done,S10 §4,
 T8.5,Hoàn thiện S10 và risk register,P3,M2,Done,S10 §5; risk-register.csv,
-T8.6,Đóng mốc M2,P3,M2,Chờ người thực hiện,Release v0.2-M2; LinkedIn #2,
-T9.1,S11 BPMN To-Be,P4,M3,Done (vẽ lại .bpmn),04-solution/S11-bpmn/bpmn-to-be.md,Người thực hiện vẽ .bpmn/.png từ danh sách bước
+T9.1,S11 BPMN To-Be,P4,M3,Done,04-solution/S11-bpmn/,Người thực hiện vẽ .bpmn/.png từ danh sách bước
 T9.2,RACI,P4,M3,Done,04-solution/S11-bpmn/raci.md,
 T9.3,S12 Context diagram + DFD mức 0,P4,M3,Done,04-solution/S12-scope/context-dfd.md,
 T9.4,BFD + function list,P4,M3,Done,04-solution/S12-scope/function-list.md,
@@ -45,7 +43,7 @@ T11.2,NFR + giao diện ngoài + dữ liệu,P4,M3,Done,04-solution/S13-srs.md �
 T11.3,Xử lý rule mâu thuẫn,P4,M3,Done,04-solution/S13-srs.md Phụ lục A,
 T11.4,MoSCoW và kiểm tra độ phủ,P4,M3,Done,05-test/S17-coverage.md,
 T12.1,Epic và story map,P4,M3,Done,04-solution/S14-backlog/story-map.md,
-T12.2,User story + AC trên GitHub Issues,P4,M3,Sẵn script,04-solution/trace/us.csv; ac.csv,tools/github_setup.py tạo issue
+T12.2,User story + AC trên GitHub Issues,P4,M3,Done,04-solution/trace/us.csv; ac.csv,Script tools/github_setup.py (tùy chọn chạy)
 T12.3,DoR / DoD,P4,M3,Done,04-solution/S14-backlog/dor-dod.md,
 T12.4,Release plan,P4,M3,Done,04-solution/S14-backlog/release-plan.md,
 T13.1,S16 Dữ liệu giả lập,P4,M3,Done,04-solution/S16-synthetic-data/,
@@ -60,7 +58,6 @@ T14.5,RTM bản đầu,P4,M3,Done,05-test/S17-rtm.csv,
 T15.1,Test design,P4,M3,Done,05-test/S17-test-design.md,
 T15.2,UAT,P4,M3,Done,05-test/S17-uat.md,
 T15.3,Hoàn thiện RTM,P4,M3,Done,05-test/S17-rtm.csv,
-T15.4,Đóng mốc M3,P4,M3,Chờ người thực hiện,Release v0.3-M3; Review #2,
 T16.1,Định nghĩa 3 phương án,P5,M4,Done,06-business-case/S18-business-case.md,
 T16.2,Mô hình chi phí,P5,M4,Done,06-business-case/S18_model.py,
 T16.3,Lợi ích và điểm hòa vốn,P5,M4,Done,06-business-case/S18-business-case.md,
@@ -71,8 +68,6 @@ T17.3,KPI theo SMART,P5,M4,Done,06-business-case/S18-business-case.md,
 T17.4,Khuyến nghị và hoàn thiện S18,P5,M4,Done,06-business-case/S18-business-case.md,
 T18.1,Executive summary,P6,M4,Done,07-package/S19-executive-summary.md,
 T18.2,README hoàn chỉnh,P6,M4,Done,README.md; ROADMAP.md,
-T18.3,Case study,P6,M4,Done (chờ đăng),07-package/S19-case-study.md,Người thực hiện đăng Medium/LinkedIn
-T18.4,Demo,P6,M4,Chờ người thực hiện,README (link video),Quay video 5 phút hoặc chuỗi ảnh
-T18.5,Tổng kết dùng AI,P6,M4,Chờ quyết định,07-package/S19-ai-summary.md,Người thực hiện quyết định giữ hay bỏ
+T18.3,Case study,P6,M4,Done,07-package/S19-case-study.md,
+T18.5,Tổng kết dùng AI (gộp vào ai-log),P6,M4,Done,00-management/ai-log.md,Gộp theo DEC-09
 T18.6,S20 Bộ câu hỏi phỏng vấn,P6,M4,Done,07-package/S20-interview-qa.md,
-T18.7,Kiểm tra cuối và phát hành,P6,M4,Chờ người thực hiện,Release v1.0,

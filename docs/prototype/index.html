@@ -63,7 +63,7 @@ const S = {
   farmers: SYN.farmers, plots: SYN.plots.map(p => ({...p, area_declared_ha: +p.area_declared_ha})),
   txns: SYN.txns.map(t => ({...t, net_kg: +t.net_kg, receipt: null})),
   receipts: [], shipments: [], audit: [],
-  params: {eudr_apply_date: '2026-12-30', buffer_m: 50, forest_overlap_min: 10, area_tolerance: 20, max_yield_t_ha: 3.5, dds_ref_alert_days: 5, grayzone_sla_days: 14, map_version: 'GFC2020-V3 + Hansen-v1.13'},
+  params: {eudr_apply_date: '2026-12-30', buffer_m: 50, forest_overlap_min: 10, area_tolerance: 20, max_yield_t_ha: 3.5, dds_ref_alert_days: 5, grayzone_sla_days: 14, map_version: 'GFC2020-V4 + Hansen-v1.13'},
   today: new Date('2026-12-08'), role: 'Tuân thủ', agent: 'DL-01'
 };
 // Ngay vao Vung xam (gia lap, on dinh theo ma lo)

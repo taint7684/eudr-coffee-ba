@@ -1,8 +1,8 @@
 {
-  "method": "v0 = minmax(agri_loss_2021_plus_ha) (cho du dien tich ca phe de chuyen v1)",
+  "method": "v1 = minmax(agri_loss_2021_plus_ha) x minmax(coffee_ha)",
   "thresholds": {
-    "tertile_low_mid": 0.105,
-    "tertile_mid_high": 0.42
+    "tertile_low_mid": 0.024,
+    "tertile_mid_high": 0.084
   },
   "loss_2021_plus_total_ha": 15873,
   "agri_loss_2021_plus_total_ha": 8689,
@@ -19,12 +19,13 @@
     ]
   },
   "high_risk_districts": [
-    "M'Đrắk",
     "Krông Bông",
     "Cư M'gar",
-    "Lắk",
-    "Ea H'leo"
+    "Ea H'leo",
+    "Krông Pắc",
+    "Krông Búk"
   ],
+  "coffee_share_high_risk": 0.559,
   "eu27_export_usd": {
     "min": 980424887,
     "likely": 1407348926,
@@ -37,9 +38,9 @@
       "max": 471530788
     },
     "deforestation_screening_lens": {
-      "min": 49021244,
-      "likely": 142845916,
-      "max": 235765394
+      "min": 137014378,
+      "likely": 228145335,
+      "max": 263585710
     },
     "assumptions": {
       "ASM-21 Dak Lak share": {
@@ -47,10 +48,10 @@
         "likely": 0.29,
         "max": 0.33
       },
-      "ASM-22 share in high-risk districts": {
-        "min": 0.2,
-        "likely": 0.35,
-        "max": 0.5
+      "share in high-risk districts": {
+        "min": 0.559,
+        "likely": 0.559,
+        "max": 0.559
       }
     }
   },

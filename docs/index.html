@@ -42,7 +42,7 @@ footer{color:var(--mute);font-size:12.5px;max-width:1180px;margin:auto;padding:0
     <div class="card"><h2>Mức rủi ro theo huyện (2021–2025)</h2><div id="map"></div>
       <div class="legend" style="margin-top:8px"><span><i style="background:var(--hi)"></i>Cao</span><span><i style="background:var(--mid)"></i>Trung bình</span><span><i style="background:var(--lo)"></i>Thấp</span></div></div>
     <div class="card"><h2>Giá trị xuất khẩu sang EU bị đe dọa (USD/năm)</h2><div id="var"></div>
-      <p class="note">Lăng kính 1: thiếu tọa độ thì không lập được DDS, nên toàn bộ phần EU bị chặn. Lăng kính 2: phần nằm ở huyện rủi ro Cao (ASM-22 tạm, chờ niên giám).</p></div>
+      <p class="note">Lăng kính 1: thiếu tọa độ thì không lập được DDS, nên toàn bộ phần EU bị chặn. Lăng kính 2: phần nằm ở 5 huyện rủi ro Cao, chiếm 55,9% diện tích cà phê (niên giám 2024).</p></div>
   </section>
 
   <section class="grid c2b" style="margin-top:16px">
@@ -58,11 +58,11 @@ footer{color:var(--mute);font-size:12.5px;max-width:1180px;margin:auto;padding:0
       <label>Ngưỡng tán cho cột "Mất 2021+" <select id="fTh"><option value="30">30% (mặc định GFW)</option><option value="10">10% (sát định nghĩa EUDR)</option><option value="50">50%</option></select></label>
     </div>
     <div class="tbl"><table id="tbl"></table></div>
-    <p class="note">Diện tích cà phê theo huyện: chờ niên giám thống kê. Khi đủ, chỉ số chuyển sang v1 = mất do nông nghiệp × diện tích cà phê.</p>
+    <p class="note">Điểm v1 = minmax(mất do nông nghiệp 2021+) × minmax(diện tích cà phê). Diện tích cà phê 2024: Niên giám thống kê Đắk Lắk, biểu 170.</p>
   </section>
 </div>
 <footer>
-  Nguồn: Global Forest Watch country statistics 2025 (Hansen et al. 2013; Sims et al. 2025 — drivers), UN Comtrade (HS 0901), ranh giới geoBoundaries VNM ADM2 (CC BY 3.0 IGO). Phương pháp và giả định: <a href="https://github.com/taint7684/eudr-coffee-ba/blob/main/03-data/S9-risk-analysis.md">S9</a> · <a href="https://github.com/taint7684/eudr-coffee-ba/blob/main/03-data/S10-critique.md">S10</a>.<br>
+  Nguồn: Global Forest Watch country statistics 2025 (Hansen et al. 2013; Sims et al. 2025 — drivers), UN Comtrade (HS 0901), Niên giám thống kê Đắk Lắk 2024, ranh giới geoBoundaries VNM ADM2 (CC BY 3.0 IGO). Phương pháp và giả định: <a href="https://github.com/taint7684/eudr-coffee-ba/blob/main/03-data/S9-risk-analysis.md">S9</a> · <a href="https://github.com/taint7684/eudr-coffee-ba/blob/main/03-data/S10-critique.md">S10</a>.<br>
   Independent research. Not legal advice. Not affiliated with any company.
 </footer>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -89,7 +89,7 @@ L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_L
 const layer = L.geoJSON(D.geo, {
   style: f => ({color: '#fff', weight: 1.2, fillOpacity: .78, fillColor: color(byName[f.properties.district].risk_level)}),
   onEachFeature: (f, l) => { const d = byName[f.properties.district];
-    l.bindTooltip(`<b>${d.district}</b><br>Mất 2021+: ${fmt(d.loss_2021_plus_ha)} ha<br>Do nông nghiệp: ${Math.round(d.agri_share * 100)}%<br>Điểm v0: ${d.risk_score} · ${d.risk_level}`, {sticky: true}); }
+    l.bindTooltip(`<b>${d.district}</b><br>Mất 2021+: ${fmt(d.loss_2021_plus_ha)} ha<br>Do nông nghiệp: ${Math.round(d.agri_share * 100)}%<br>Cà phê: ${fmt(d.coffee_ha || 0)} ha<br>Điểm v1: ${d.risk_score} · ${d.risk_level}`, {sticky: true}); }
 }).addTo(map);
 map.fitBounds(layer.getBounds());
 
@@ -130,8 +130,8 @@ function table() {
   const lv = document.getElementById('fLevel').value, th = document.getElementById('fTh').value;
   const rows = D.districts.filter(d => !lv || d.risk_level === lv);
   const loss = d => th === '30' ? d.loss_2021_plus_ha : (D.threshold[d.district] || {})['loss21_t' + th + '_ha'];
-  document.getElementById('tbl').innerHTML = `<tr><th>Huyện</th><th>Mất 2021+ (ha)</th><th>Do nông nghiệp (ha)</th><th>% nông nghiệp</th><th>So 2016–20</th><th>Điểm v0</th><th>Mức</th></tr>` +
-    rows.map(d => `<tr><td>${d.district}</td><td>${fmt(loss(d))}</td><td>${fmt(d.agri_loss_2021_plus_ha)}</td><td>${Math.round(d.agri_share * 100)}%</td><td>${Math.round(d.loss_trend_pct * 100)}%</td><td>${(+d.risk_score).toFixed(3)}</td><td><span class="pill" style="background:${color(d.risk_level)}">${d.risk_level}</span></td></tr>`).join('');
+  document.getElementById('tbl').innerHTML = `<tr><th>Huyện</th><th>Mất 2021+ (ha)</th><th>Do nông nghiệp (ha)</th><th>% nông nghiệp</th><th>So 2016–20</th><th>Cà phê 2024 (ha)</th><th>Điểm v1</th><th>Mức</th></tr>` +
+    rows.map(d => `<tr><td>${d.district}</td><td>${fmt(loss(d))}</td><td>${fmt(d.agri_loss_2021_plus_ha)}</td><td>${Math.round(d.agri_share * 100)}%</td><td>${Math.round(d.loss_trend_pct * 100)}%</td><td>${+d.coffee_ha ? fmt(d.coffee_ha) : '—'}</td><td>${(+d.risk_score).toFixed(3)}</td><td><span class="pill" style="background:${color(d.risk_level)}">${d.risk_level}</span></td></tr>`).join('');
 }
 document.getElementById('fLevel').onchange = table; document.getElementById('fTh').onchange = table; table();
 </script>

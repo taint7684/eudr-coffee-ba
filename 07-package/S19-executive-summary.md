@@ -11,7 +11,7 @@ From **30 December 2026**, coffee placed on the EU market must be deforestation-
 Business analysis for a fictitious mid-size exporter in Đắk Lắk (30,000 t/year):
 
 1. **Regulation → requirements.** 40 obligations extracted verbatim from the official texts by script, then gap-scored: 14 ⛔ not met, 12 ⚠️ partial, 14 ✏️ needs interpretation.
-2. **Public satellite data.** District risk screening for 15 districts, built from Global Forest Watch tree-cover loss and driver data.
+2. **Public satellite and statistical data.** District risk screening for 15 districts, combining Global Forest Watch tree-cover loss and drivers with official coffee area from the 2024 provincial statistical yearbook.
 3. **Self-critique of the data.** Canopy-threshold sensitivity, tree cover loss vs. EU forest definition, and a "gray zone" rule set for uncertain plots.
 4. **Solution design.** BPMN, ISO/IEC/IEEE 29148 SRS with 24 FR, 28 EARS business rules and 12 NFR; 31 user stories and 58 acceptance criteria; 88 test cases; a machine-checked RTM; a clickable prototype.
 5. **Business case.** Three options, Monte Carlo, tornado chart and break-even analysis.
@@ -20,7 +20,7 @@ Business analysis for a fictitious mid-size exporter in Đắk Lắk (30,000 t/y
 
 | # | Finding | Evidence |
 |---|---|---|
-| 1 | **The binding constraint is missing data, not deforestation.** Without plot coordinates no DDS can be filed, which puts **~USD 245–472 m/year** of Đắk Lắk coffee exports to the EU at risk. Only USD 49–236 m sits in high-risk districts. | S9 §3 |
+| 1 | **The binding constraint is missing data, not deforestation.** Without plot coordinates no DDS can be filed, which puts **~USD 245–472 m/year** of Đắk Lắk coffee exports to the EU at risk. USD 137–264 m sits in the five high-risk districts, which hold 55.9% of the province's coffee area. | S9 §3 |
 | 2 | **Vietnam is classified low-risk** (Implementing Regulation 2025/1093). EU importers can use simplified due diligence, but still need every plot's geolocation and verifiable deforestation-free evidence (Art. 9, 13). The Vietnamese exporter is **not** the EUDR "operator", so the system produces a DDS *data package* for the EU importer rather than filing the DDS. | S7; DEC-03, DEC-04 |
 | 3 | **Tree cover loss ≠ deforestation.** Đắk Lắk lost 15,873 ha of tree cover in 2021–2025 (−48% vs. 2016–2020). **5 of 15 districts account for 80%** of it. 55% is attributed to agriculture and 44% to logging. In core coffee districts almost 100% is agricultural, which is likely shade-tree or replanting cycles that EUDR excludes from "forest" (Art. 2(6)). | S9; S10 |
 
@@ -43,6 +43,6 @@ Business analysis for a fictitious mid-size exporter in Đắk Lắk (30,000 t/y
 ## Limitations
 
 - No access to company data and no field interviews; firm-level figures are documented assumptions.
-- District coffee area is still pending the provincial statistical yearbook.
-- The Hansen vs. JRC GFC2020 overlay script is ready but has not yet been run.
+- District statistics support screening only; they do not replace plot boundaries.
+- The Hansen vs. JRC GFC2020 overlay is scoped as an extension.
 - The largest uncertainty in the business case is the market price penalty (ASM-25).

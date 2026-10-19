@@ -58,7 +58,7 @@ erDiagram
   }
   MAP_VERSION {
     string map_version_id PK
-    string forest2020_source "JRC GFC2020 V3"
+    string forest2020_source "JRC GFC2020 V4"
     string loss_source "Hansen GFC v1.x"
     date released_at
   }

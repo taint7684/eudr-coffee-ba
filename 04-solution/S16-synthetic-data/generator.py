@@ -139,7 +139,7 @@ def main():
         else:
             p.update({"doc_type": "GCN QSDĐ", "doc_number": f"CS{rng.randint(100000, 999999)}",
                       "area_on_doc_ha": round(area / 1.5, 2), "legal_status": "Mâu thuẫn"})
-        p["map_version"] = "GFC2020-V3 + Hansen-v1.13"
+        p["map_version"] = "GFC2020-V4 + Hansen-v1.13"
 
     tid = 0
     for p in plots:

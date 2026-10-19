@@ -1,9 +1,9 @@
 id,risk,probability(1-5),impact(1-5),score,response,owner,status
 RSK-01,EUDR tiếp tục bị hoãn hoặc sửa đổi sau rà soát định kỳ,2,3,6,"Yêu cầu viết theo nguyên tắc (tọa độ, thẩm định) thay vì gắn cứng ngày; tham số hóa ngày áp dụng; kiểm tra EUR-Lex tuần 4/8/12/16",Người thực hiện,Mở
-RSK-02,Việt Nam bị xếp lại từ rủi ro thấp sang rủi ro chuẩn ở lần rà soát xếp hạng,2,4,8,"Thiết kế module chấm rủi ro lô đủ cho thẩm định đầy đủ Điều 10–11 (DEC-04); kịch bản riêng trong business case",Người thực hiện,Mở
-RSK-03,Không lấy được niên giám thống kê có diện tích cà phê theo huyện,3,3,9,"Dùng số rời có nguồn (Cư M'gar, Krông Búk…) + hỏi Thống kê tỉnh; phương án dự phòng: ước diện tích cà phê bằng lớp nguyên nhân 'Permanent agriculture' hoặc bản đồ cây trồng vệ tinh, ghi giới hạn",Người thực hiện,Mở
-RSK-04,Số mất cây che phủ (Hansen) lệch nhiều so với JRC TMF/GFC2020,4,3,12,"Biến thành phát hiện ở S10: định lượng độ lệch, đặt quy tắc Vùng xám khi hai nguồn trái nhau",Người thực hiện,Mở
-RSK-05,Diễn giải sai hoặc trích sai nội dung pháp lý,3,4,12,"Mọi REQ-EU trích nguyên văn từ văn bản tải về từ Cellar; cột article ghi rõ văn bản sửa đổi; ghi lỗi diễn giải vào ai-log",Người thực hiện,Đang xử lý
+RSK-02,Việt Nam bị xếp lại từ rủi ro thấp sang rủi ro chuẩn ở lần rà soát xếp hạng,2,4,8,Thiết kế module chấm rủi ro lô đủ cho thẩm định đầy đủ Điều 10–11 (DEC-04); kịch bản riêng trong business case,Người thực hiện,Mở
+RSK-03,Không lấy được niên giám thống kê có diện tích cà phê theo huyện,3,3,9,"Đã lấy niên giám 2024 (SRC-033), trích tự động; tổng khớp số tỉnh",Người thực hiện,Đã xử lý
+RSK-04,Số mất cây che phủ (Hansen) lệch nhiều so với JRC TMF/GFC2020,4,3,12,Độ nhạy ngưỡng tán đã định lượng (S10 §1a); so Hansen × JRC chuyển sang Hướng mở rộng (DEC-08); quy tắc Vùng xám khi hai nguồn trái nhau,Người thực hiện,Mở
+RSK-05,Diễn giải sai hoặc trích sai nội dung pháp lý,3,4,12,Mọi REQ-EU trích nguyên văn từ văn bản tải về từ Cellar; cột article ghi rõ văn bản sửa đổi; ghi lỗi diễn giải vào ai-log,Người thực hiện,Đang xử lý
 RSK-06,Phạm vi phình to (thêm tỉnh/mặt hàng/luồng phụ),3,3,9,Khóa Robusta + Đắk Lắk cũ + một luồng chính; ý mở rộng vào mục Hướng mở rộng,Người thực hiện,Mở
 RSK-07,Thiếu thời gian (bán thời gian 8–10 giờ/tuần),3,3,9,Áp dụng danh sách cắt ROADMAP 4.3; các sản phẩm không bao giờ cắt: S7 · S10 · S17 RTM · T17.2,Người thực hiện,Mở
 RSK-08,Giấy phép dữ liệu không cho phép công bố lại (GADM),2,2,4,Không commit ranh giới GADM thô; chỉ công bố bảng số đã tổng hợp + ghi điều khoản ở chân dashboard,Người thực hiện,Mở

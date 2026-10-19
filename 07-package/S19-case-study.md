@@ -50,7 +50,7 @@ All requirements, stories, criteria and tests live in CSV files. A build script 
 
 ## 4. The business case: data is the binding constraint
 
-The value-at-risk analysis gave the project's main insight. The coffee from Đắk Lắk's five high-risk districts is worth roughly USD 49–236 million a year in EU exports. Without plot coordinates, however, **no** due diligence statement can be filed. That blocks the whole Đắk Lắk share of EU exports, roughly **USD 245–472 million a year**, even when the land is clean. The MVP therefore prioritises collecting coordinates over sophisticated risk scoring.
+The value-at-risk analysis gave the project's main insight. The five high-risk districts hold 55.9% of Đắk Lắk's coffee area (2024 statistical yearbook), worth roughly USD 137–264 million a year in EU exports. Without plot coordinates, however, **no** due diligence statement can be filed. That blocks the whole Đắk Lắk share of EU exports, roughly **USD 245–472 million a year**, even when the land is clean. The MVP therefore prioritises collecting coordinates over sophisticated risk scoring.
 
 For the fictitious exporter (30,000 t/year, 45% to the EU), I compared building in-house, renting SaaS and joining an industry consortium over three years:
 
@@ -63,8 +63,8 @@ A tornado chart showed that the three parameters that matter all sit on the **be
 ## 5. What I would do differently
 
 - **Talk to an importer first.** The weakest assumption in the model is the market price penalty. One conversation with an EU buyer would tighten the business case more than any model change.
-- **Get the statistical yearbook early.** District coffee area is the missing input for the final risk index, and it exists only in print.
-- **Run the plot-overlay script.** The Earth Engine script that overlays Hansen loss on the EU's 2020 forest map is ready. Its result will show what share of "loss" really sits in forest.
+- **Get the statistical yearbook early.** The official district coffee area changed the high-risk list: the district with the most tree-cover loss (M'Đrắk) has under 2,000 ha of coffee, while the coffee heartland moved to the top.
+- **Run the plot-overlay analysis.** Overlaying Hansen loss on the EU's 2020 forest map would show what share of "loss" really sits in forest. It is scoped as an extension.
 
 The broader lesson: in compliance projects, the regulation is the easy part to read and the hardest part to read *correctly*. Secondary summaries and first drafts consistently missed the amendment, the low-risk classification and the operator definition. Each of those changed the design.
 

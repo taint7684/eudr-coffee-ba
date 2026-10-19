@@ -17,71 +17,21 @@ EUDR yêu cầu cà phê vào EU không đến từ đất phá rừng sau 31/12
 | RQ5 | Nên đầu tư phương án nào, khi nào không đáng? | S18 |
 
 **Phạm vi:** Robusta · Đắk Lắk (ranh giới trước 07/2025) · luồng đăng ký lô → thu mua → chấm rủi ro → gói dữ liệu DDS · thiết kế mức SRS + prototype + test.
-**Ngoài phạm vi (Hướng mở rộng):** cao su, gỗ, các tỉnh khác · logistics, thanh toán, chứng nhận 4C/RA · viết code, triển khai thật · dữ liệu nội bộ DN.
+**Ngoài phạm vi (Hướng mở rộng):** so Hansen × JRC GFC2020 · cao su, gỗ, các tỉnh khác · logistics, thanh toán, chứng nhận 4C/RA · viết code, triển khai thật · dữ liệu nội bộ DN.
 
 ## 2. Giai đoạn và mốc
 
 | Giai đoạn | Tuần | Sản phẩm | Mốc | Trạng thái |
 |---|---|---|---|---|
 | P0 Chuẩn bị | 0 | Repo, file quản lý, kiểm tra khả thi (DEC-01) | — | Xong |
-| P1 Discovery | 1–3 | S1–S7 | M1 | Tài liệu xong; chờ review #1, bài LinkedIn #1, release v0.1-M1 |
-| P2 Dữ liệu | 4–7 | S8, S9, dashboard | — | Xong; chờ niên giám (diện tích cà phê theo huyện) |
-| P3 Phản biện | 8 | S10 | M2 | Xong; chờ chạy script GEE (T8.1b), bài LinkedIn #2 |
-| P4 Thiết kế | 9–15 | S11–S17 | M3 | Xong; chờ vẽ BPMN .bpmn, review #2 |
+| P1 Discovery | 1–3 | S1–S7 | M1 | Xong |
+| P2 Dữ liệu | 4–7 | S8, S9, dashboard | — | Xong (diện tích cà phê theo niên giám 2024, DEC-08) |
+| P3 Phản biện | 8 | S10 | M2 | Xong (so Hansen × JRC chuyển Hướng mở rộng, DEC-08) |
+| P4 Thiết kế | 9–15 | S11–S17 | M3 | Xong |
 | P5 Business case | 16–17 | S18 | — | Xong |
-| P6 Đóng gói | 18 | S19, S20, README | M4 | Tài liệu xong; chờ đăng case study, video demo, release v1.0 |
+| P6 Đóng gói | 18 | S19, S20, README | M4 | Xong |
 
-## 3. Checklist mốc
-
-**M1 (tuần 3)**
-- [x] S1–S7 trên GitHub
-- [x] README có Problem, Scope, Disclaimer
-- [ ] Review #1 đã ghi và xử lý
-- [ ] Bài LinkedIn #1
-- [ ] Release v0.1-M1
-
-**M2 (tuần 8)**
-- [x] S8–S10; dashboard trong `docs/`
-- [ ] Bật GitHub Pages
-- [ ] Bài LinkedIn #2
-- [ ] Release v0.2-M2
-
-**M3 (tuần 15)**
-- [x] S11–S17
-- [x] Mọi REQ-EU ⛔ đi tới TC trong RTM (14/14)
-- [ ] Backlog trên GitHub Projects (chạy `tools/github_setup.py`)
-- [ ] Review #2
-- [ ] Release v0.3-M3
-
-**M4 (tuần 18) — định nghĩa hoàn thành dự án**
-- [x] S1–S20 có trên GitHub (trừ một mục S19 đang chờ quyết định)
-- [x] Mọi số liệu có SRC, mọi giả định có ASM
-- [x] RTM đầy đủ hai chiều
-- [ ] Mọi link (Pages, video) mở được ở cửa sổ ẩn danh
-- [ ] Có 3 bài đăng
-- [ ] Một người ngoài đọc README và nói lại được dự án trong 2 phút
-- [ ] Release v1.0
-
-## 4. Nhịp làm việc
-
-| Chu kỳ | Việc |
-|---|---|
-| Cuối mỗi tuần | Chuyển issue sang Done · kiểm tra số liệu thiếu nguồn · commit |
-| Tuần 4 · 8 · 12 · 16 | Kiểm tra EUR-Lex và trang EC xem EUDR có thay đổi không; có thì ghi risk-register và cập nhật S7 |
-| Tuần 3 · 15 | Nhờ người review |
-
-## 5. Danh sách cắt khi chậm hơn 1 tuần (cắt từ trên xuống)
-
-1. Video demo → chuỗi ảnh có chú thích
-2. So hai nguồn → giữ một nguồn, ghi giới hạn
-3. GEE → chỉ dùng số GFW
-4. Mock 5 màn → 3 màn (SCR-02, SCR-03, SCR-05)
-5. Phương án C → chỉ so A và B
-6. Persona nông hộ → gộp vào persona đại lý
-
-**Không bao giờ cắt:** S7 · S10 · S17 RTM · T17.2.
-
-## 6. Nguyên tắc chất lượng
+## 3. Nguyên tắc chất lượng
 
 1. Không có nguồn thì không dùng: mọi số liệu có mã SRC.
 2. Giả định phải ghi ra: mã ASM, mức tin cậy, min/likely/max, hệ quả nếu sai.

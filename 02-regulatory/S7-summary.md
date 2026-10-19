@@ -50,6 +50,7 @@ Mọi dòng ⛔ đều trỏ tới ít nhất một GAP (S5) và một RC (S6).
 - **Định nghĩa rừng VN và EU:** cần trích Luật Lâm nghiệp 2017 để so ngưỡng diện tích, chiều cao và độ che phủ [Unverified].
 - **Lô EUDR và thửa đất:** quy ước 1 lô = 1 thửa trên giấy chứng nhận, hoặc 1 vùng canh tác liền khoảnh nếu không có giấy. Xử lý ở SRS (Rule conflicts).
 - **Nông lâm kết hợp:** cà phê xen cây che bóng. Quy tắc phân loại lô đặt ở S10, mục 3.
+- **Một DDS cho nhiều lô hàng:** Guidance/FAQ cập nhật kèm báo cáo rà soát COM(2026) 191 cho phép một DDS bao nhiều lô hàng (SRC-005). Gói dữ liệu ECTS vì vậy có thể gộp nhiều lô hàng của cùng nhà nhập khẩu (Hướng mở rộng của FR-017).
 - **Tờ khai đơn giản hóa (Điều 4a):** không áp dụng cho luồng chính vì nông hộ không tự đưa hàng vào EU.
 
 ## 6. Việc người thực hiện phải tự kiểm chứng

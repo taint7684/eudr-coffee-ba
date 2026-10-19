@@ -17,11 +17,12 @@ EUDR định nghĩa rừng ở ngưỡng tán > 10% (Điều 2(4)), còn GFW m�
 Huyện nhạy nhất: Ea Súp (×1,95), Buôn Đôn (×1,67). Đây là vùng rừng khộp thưa, nhiều diện tích có độ tán 10–30%.
 **Kết luận:** dùng ngưỡng 30% làm số liệu chính sẽ **đánh giá thấp** rủi ro ở vùng rừng khộp phía tây. Hệ thống ECTS chấm lô bằng bản đồ rừng 2020 (đã theo định nghĩa EU), không dùng ngưỡng tán.
 
-### 1b. Hansen so với bản đồ rừng 2020 của EU (cần chạy GEE)
+### 1b. Hansen so với bản đồ rừng 2020 của EU — Hướng mở rộng (DEC-08)
 
-- Script: [notebooks/T8.1_hansen_vs_gfc2020.js](notebooks/T8.1_hansen_vs_gfc2020.js). Script tính tỷ lệ mất cây che phủ 2021+ **nằm trong đất mà JRC GFC2020 coi là rừng năm 2020**.
-- **Giả thuyết cần kiểm:** ở vùng lõi cà phê (Cư M'gar, Krông Búk, Krông A Na), tỷ lệ này thấp. Nghĩa là phần lớn "mất cây che phủ" là chặt, tái canh cây lâu năm hoặc cây che bóng trên đất đã canh tác, không phải phá rừng theo Điều 2(3) và 2(6).
-- **Kết quả:** _chờ người thực hiện chạy script và dán bảng vào đây_.
+- Đây là phân tích độ nhạy giữa hai bộ dữ liệu. Hai bộ khác nhau về định nghĩa, phạm vi và phương pháp, nên không bộ nào được dùng để "xác nhận" bộ kia.
+- **Giả thuyết:** ở vùng lõi cà phê (Cư M'gar, Krông Búk, Krông A Na), tỷ lệ mất cây che phủ 2021+ nằm trong đất mà JRC GFC2020 coi là rừng năm 2020 là thấp. Nghĩa là phần lớn số mất là chặt, tái canh cây lâu năm hoặc cây che bóng trên đất đã canh tác, không phải phá rừng theo Điều 2(3), 2(6).
+- **Cách làm sẵn có:** (A) script GEE [notebooks/T8.1_hansen_vs_gfc2020.js](notebooks/T8.1_hansen_vs_gfc2020.js); (B) không dùng GEE: tải raster JRC TMF/GFC2020 và kiểm tra trong QGIS trên một vùng nhỏ.
+- Không chặn luồng chính: hệ thống chấm lô (BR-010…014) vẫn dùng cả hai lớp, và lô có kết quả trái nhau vào Vùng xám.
 
 ### 1c. Hai nguồn số liệu thương mại
 
@@ -34,7 +35,7 @@ UN Comtrade (Việt Nam báo cáo) cho năm 2023: 1,08 triệu tấn, 3,18 tỷ 
 | D-01 Hansen/GFW | 3 | 2 | 3 | 2 | Đủ 15 huyện, có số đến 2025; đo cây che phủ chứ không đo rừng; phương pháp đổi giữa các phiên bản |
 | D-02 Nguyên nhân 1 km | 3 | 2 | 3 | 2 | Phủ đủ; 1 km quá thô so với lô 1 ha |
 | D-03 JRC GFC2020 | 3 | 2 | 2 | 3 | 10 m, đúng mốc 2020; có danh sách lỗi đã biết, nông lâm kết hợp dễ bị nhầm thành rừng |
-| D-05 Niên giám | 1 | 3 | 2 | 3 | Chưa lấy được; khi có thì là số chính thức |
+| D-05 Niên giám | 3 | 3 | 2 | 3 | Đủ 15 huyện, 2020–2024, số chính thức; trễ khoảng 1 năm |
 | D-06 Comtrade | 2 | 2 | 1 | 2 | Thiếu 2024–2025; lệch với số Hải quan |
 | D-09 geoBoundaries | 3 | 2 | 2 | 3 | Đơn giản hóa; ranh giới trước 01/7/2025 |
 
@@ -79,7 +80,7 @@ Nguyên tắc: **khi dữ liệu không chắc, hệ thống không tự kết l
 | ASM | Giả định | Tin cậy | Vì sao nguy hiểm |
 |---|---|:-:|---|
 | ASM-07 | Mất cây che phủ ≈ mất rừng | L | Có thể thổi phồng rủi ro ở vùng lõi cà phê, nơi gần 100% số mất là do nông nghiệp |
-| ASM-22 | 35% diện tích ở huyện rủi ro Cao | L | Quyết định lăng kính 2 của giá trị bị đe dọa |
+| ASM-21 | Đắk Lắk chiếm 25–33% xuất khẩu cà phê VN | M | Quyết định cả hai lăng kính của giá trị bị đe dọa; tính theo diện tích, chưa theo sản lượng xuất khẩu |
 | ASM-13 | Vùng đệm 50 m | L | Quyết định tỷ lệ Vùng xám, tức chi phí xác minh |
 | ASM-16 | Chi phí thu tọa độ/lô | L | Tham số nhạy nhất của business case [Inference, kiểm ở T16.4] |
 | ASM-01 | 30.000 t/năm | L | Định cỡ toàn bộ business case |

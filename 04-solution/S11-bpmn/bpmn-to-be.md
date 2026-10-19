@@ -1,6 +1,8 @@
 # S11 — Quy trình To-Be (BPMN)
 
-> Dạng chữ chuẩn BPMN để vẽ lại trên draw.io / Camunda Modeler (`.bpmn` + `.png` lưu cùng thư mục). Sơ đồ Mermaid dưới đây dùng để xem nhanh.
+> File BPMN 2.0: [ects-to-be.bpmn](ects-to-be.bpmn) (mở bằng Camunda Modeler hoặc demo.bpmn.io) · ảnh [PNG](ects-to-be.png) · [SVG](ects-to-be.svg). Sinh bằng `build_bpmn.py`. Bảng bước bên dưới là đặc tả chi tiết cấp 2.
+
+![BPMN To-Be](ects-to-be.png)
 > Pool: Nông hộ · Đại lý · DN xuất khẩu (Thu mua, Tuân thủ) · Hệ thống ECTS · Nhà nhập khẩu EU (operator) · Hệ thống thông tin EU.
 
 ## Cấp 1 — Toàn chuỗi

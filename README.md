@@ -7,7 +7,7 @@ Scope: Robusta · Đắk Lắk (pre-2025 boundaries) · fictitious mid-size expo
 
 ## Three findings
 
-1. **Missing data is the binding constraint, not deforestation.** Without plot coordinates no due diligence statement can be filed. That puts **USD 245–472 m/year** of Đắk Lắk coffee exports to the EU at risk; only USD 49–236 m sits in high-risk districts.
+1. **Missing data is the binding constraint, not deforestation.** Without plot coordinates no due diligence statement can be filed. That puts **USD 245–472 m/year** of Đắk Lắk coffee exports to the EU at risk; USD 137–264 m sits in the five high-risk districts, which hold 55.9% of the province's coffee area (2024 statistical yearbook).
 2. **Vietnam is low-risk under EUDR, but plot-level evidence is still required.** The exporter is not the EUDR *operator*, so the system produces a **DDS data package** for the EU importer.
 3. **Tree cover loss ≠ deforestation.** 15,873 ha were lost in 2021–2025 (−48% vs. 2016–2020). 5 of 15 districts account for 80% of it. In core coffee districts the loss is almost entirely agricultural, likely replanting rather than forest conversion.
 
@@ -54,14 +54,15 @@ flowchart LR
 
 ## By the numbers
 
-40 EUDR obligations · 24 FR · 28 business rules (EARS) · 12 NFR · 31 user stories · 58 acceptance criteria · 88 test cases · 184 RTM rows · 0 coverage errors · 32 sources · 32 assumptions · 7 decisions.
+40 EUDR obligations · 24 FR · 28 business rules (EARS) · 12 NFR · 31 user stories · 58 acceptance criteria · 88 test cases · 184 RTM rows · 0 coverage errors · 33 sources · 32 assumptions · 9 decisions.
 
 ## Reproduce
 
-Requires Python 3.10+ and `openpyxl`. Raw data are not committed; download commands are in each folder's README.
+Requires Python 3.10+, `openpyxl` and `pypdf`. Raw data are not committed; download commands are in each folder's README.
 
 ```bash
 py 02-regulatory/scripts/html2txt.py && py 02-regulatory/scripts/build_s7.py     # S7 from official texts
+py 03-data/scripts/00_gso_coffee.py                                               # yearbook coffee area
 py 03-data/scripts/01_extract_gfw.py && py 03-data/scripts/02_comtrade_eu.py      # data
 py 03-data/scripts/03_drivers.py && py 03-data/scripts/04_analysis.py && py 03-data/scripts/05_sensitivity.py
 py 04-solution/S16-synthetic-data/generator.py                                    # synthetic data
@@ -77,8 +78,8 @@ Python (data pipeline, models, RTM checks) · Google Earth Engine (plot overlay 
 ## Limitations
 
 - Public data and labelled synthetic data only; no company data, no field interviews.
-- District coffee area is pending the provincial statistical yearbook, so the risk index uses version v0.
-- The Hansen × JRC GFC2020 overlay ([script](03-data/notebooks/T8.1_hansen_vs_gfc2020.js)) has not been run yet.
+- District statistics do not replace plot boundaries; they are used for screening and prioritisation only.
+- Hansen × JRC GFC2020 overlay is an extension ([script](03-data/notebooks/T8.1_hansen_vs_gfc2020.js)); plot screening already flags disagreement between the two layers as a gray zone.
 - District analysis uses administrative boundaries from before 1 July 2025.
 
 ## Disclaimer
@@ -87,4 +88,4 @@ Independent research. Not legal advice. Not affiliated with any company. "DakCof
 
 ## Data licences
 
-Global Forest Watch / Hansen et al. (CC BY 4.0) · Sims et al. 2025 · JRC GFC2020 · UN Comtrade terms of use · geoBoundaries (CC BY 3.0 IGO) · EU legal texts (reuse permitted). GADM boundaries are used locally only and are not redistributed. Project documents are licensed CC BY 4.0, code MIT ([LICENSE](LICENSE)).
+Global Forest Watch / Hansen et al. (CC BY 4.0) · Sims et al. 2025 · JRC GFC2020 · UN Comtrade terms of use · Đắk Lắk Statistical Yearbook 2024 · geoBoundaries (CC BY 3.0 IGO) · EU legal texts (reuse permitted). GADM boundaries are used locally only and are not redistributed. Project documents are licensed CC BY 4.0, code MIT ([LICENSE](LICENSE)).

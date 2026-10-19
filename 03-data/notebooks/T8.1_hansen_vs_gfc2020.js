@@ -7,7 +7,7 @@
 //
 // [Unverified] Kiểm tra mã asset trong Data Catalog trước khi chạy:
 //   - Hansen: chọn phiên bản mới nhất (vd UMD/hansen/global_forest_change_2025_v1_13).
-//   - GFC2020: JRC/GFC2020/V3 (V2 đã deprecated).
+//   - GFC2020: JRC/GFC2020/V4 (V2, V3 đã deprecated).
 //   - geoBoundaries: WM/geoLab/geoBoundaries/600/ADM2.
 
 var HANSEN = 'UMD/hansen/global_forest_change_2024_v1_12';   // TODO: đổi sang bản mới nhất có năm 2025
@@ -26,7 +26,7 @@ var gfc = ee.Image(HANSEN);
 var tc2000 = gfc.select('treecover2000').gte(CANOPY);
 var loss21 = gfc.select('lossyear').gte(LOSS_FROM).and(tc2000);
 
-var forest2020 = ee.ImageCollection('JRC/GFC2020/V3').mosaic().select('Map').eq(1);
+var forest2020 = ee.ImageCollection('JRC/GFC2020/V4').mosaic().select('Map').eq(1);
 
 var areaHa = ee.Image.pixelArea().divide(1e4);
 var stack = ee.Image.cat([

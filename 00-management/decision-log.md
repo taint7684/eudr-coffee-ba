@@ -12,7 +12,7 @@ Mỗi quyết định gồm: mã · bối cảnh · phương án đã xét · l�
 | Điểm | Kết quả | Kết luận | Nguồn |
 |---|---|---|---|
 | 1. Mốc EUDR | Regulation (EU) 2025/2650 dời ngày áp dụng sang **30/12/2026**. DN siêu nhỏ/nhỏ thành lập trước 31/12/2024 áp dụng từ **30/06/2027** (Điều 38(2)–(3) mới). Rà soát đơn giản hóa (COM(2026) 191, 04/5/2026) không đề xuất sửa luật thêm [Unverified: mới đọc tóm tắt]. Việt Nam được xếp **rủi ro thấp** (Implementing Regulation 2025/1093). | **Đạt** — EUDR còn hiệu lực, có mốc cụ thể. Nhưng phải đổi cách đóng khung (DEC-03, DEC-04). | SRC-003, SRC-004, SRC-005 |
-| 2. Diện tích cà phê theo huyện | Không tìm thấy niên giám Đắk Lắk bản điện tử công khai. Có số rời cho Cư M'gar (37.600–38.906 ha), Krông Búk (20.415 ha) [Unverified]. Cấp huyện kết thúc hoạt động từ 01/7/2025; Đắk Lắk hợp nhất với Phú Yên. | **Đạt có điều kiện** — cần người thực hiện lấy niên giám (bản giấy/PDF từ Thống kê tỉnh). Phân tích theo 15 huyện cũ (DEC-05). | SRC-017, SRC-018, SRC-019, SRC-021, SRC-022 |
+| 2. Diện tích cà phê theo huyện | Không tìm thấy niên giám Đắk Lắk bản điện tử công khai. Có số rời cho Cư M'gar (37.600–38.906 ha), Krông Búk (20.415 ha) [Unverified]. Cấp huyện kết thúc hoạt động từ 01/7/2025; Đắk Lắk hợp nhất với Phú Yên. | **Đạt có điều kiện** — phân tích theo 15 huyện cũ (DEC-05). Cập nhật: đã có niên giám 2024 (DEC-08). | SRC-017, SRC-018, SRC-019, SRC-021, SRC-022 |
 | 3. Mất rừng theo huyện | Workbook thống kê quốc gia của GFW có số mất cây che phủ 2001–2025 cho **15 huyện cũ của Đắk Lắk**, kèm nguyên nhân (Sims 2025). Data API cần API key miễn phí. | **Đạt** — đã trích được (03-data/processed/). | SRC-008 |
 
 - **Phương án đã xét:** (a) đi tiếp đúng kế hoạch; (b) phân tích ô lưới 5×5 km; (c) chuyển sang GEE ngay; (d) đổi khung "yêu cầu thị trường".
@@ -79,3 +79,16 @@ Mỗi quyết định gồm: mã · bối cảnh · phương án đã xét · l�
 - **Phương án đã xét:** (a) bảo toàn nguồn gốc từng hộ (identity preserved); (b) tách dòng: hàng EU từ nhiều lô Đạt được trộn với nhau nhưng không trộn với hàng khác; (c) cân bằng khối lượng.
 - **Lựa chọn:** (b). Gói DDS liệt kê mọi lô đã đóng góp vào phiếu nhập dòng EU của lô hàng.
 - **Lý do:** (a) quá tốn kho với nông hộ 1 ha; (c) không bảo đảm sản phẩm thực tế chỉ chứa hàng từ lô đã khai [Unverified: cần đối chiếu FAQ/Guidance của EC về mass balance]. Câu hỏi đưa vào S20.
+
+## DEC-08 — Diện tích cà phê theo niên giám; so Hansen × JRC chuyển sang Hướng mở rộng
+
+- **Ngày:** 2026-10-20
+- **Bối cảnh:** Tìm được Niên giám thống kê Đắk Lắk 2024 bản PDF chính thức (SRC-033), biểu 170–172 có diện tích trồng, thu hoạch, sản lượng cà phê của 15 huyện, 2020–2024. Việc so Hansen với JRC (T8.1b) cần tài khoản Google Earth Engine.
+- **Lựa chọn:** (1) Dùng biểu 170 năm 2024 làm `coffee_ha`; chỉ số rủi ro chuyển sang v1. Giữ niên giám 2024 (ranh giới cũ), không dùng niên giám 2025 (tỉnh mới sau hợp nhất) để không trộn hai hệ địa giới. (2) T8.1b chuyển sang Hướng mở rộng; script GEE giữ trong repo.
+- **Lý do:** (1) Số chính thức thay giả định ASM-22. (2) So sánh hai bộ dữ liệu là phân tích độ nhạy bổ sung, không phải điều kiện của luồng chính; độ nhạy theo ngưỡng tán đã định lượng ở S10 §1a.
+- **Giới hạn:** số cấp huyện không thay dữ liệu ranh giới từng lô; không dùng để kết luận tỷ lệ lô cà phê bị ảnh hưởng bởi phá rừng.
+
+## DEC-09 — Phạm vi đóng gói
+
+- **Ngày:** 2026-10-20
+- **Lựa chọn:** Bỏ khỏi phạm vi dự án các hoạt động truyền thông và phát hành (review bên ngoài, bài đăng, video demo, release theo mốc). T18.5 gộp vào `ai-log.md`, không tạo file tổng kết riêng.
