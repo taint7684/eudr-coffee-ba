@@ -178,8 +178,8 @@ R.SCR02 = function () {
     <div id="perr"></div><button class="p" id="ps">Lưu → Chờ chấm</button>
   </div><div class="card"><div id="pmap" class="map" style="height:520px"></div><div class="mute" style="margin-top:6px">Lô đã đăng ký hiển thị viền xám; lô trùng tô đỏ.</div></div></div>`;
   const f0 = byId(S.farmers, 'farmer_id', $('#pf').value), p0 = S.plots.find(p => p.farmer_id === f0.farmer_id) || S.plots[0];
-  mapObj = L.map('pmap').setView(plotLatLngs(p0)[0], 15);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution: '© OpenStreetMap', maxZoom: 19}).addTo(mapObj);
+  mapObj = L.map('pmap').setView(plotLatLngs(p0)[0], 17);
+  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {attribution: 'Esri World Imagery', maxZoom: 19}).addTo(mapObj);
   S.plots.forEach(p => { if (p.geometry.type === 'Polygon') L.polygon(plotLatLngs(p), {color: '#888', weight: 1, fillOpacity: .05}).addTo(mapObj); else L.circleMarker(plotLatLngs(p)[0], {radius: 3, color: '#888'}).addTo(mapObj); });
   let mode = 'pt', pts = [], shape = null, hl = null;
   const area = () => +$('#pa').value;
