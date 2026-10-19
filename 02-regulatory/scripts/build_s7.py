@@ -203,7 +203,7 @@ def main():
         sys.exit("Loi anchor:\n" + "\n".join(errors))
     dst = BASE / "S7-eudr-requirements.csv"
     with open(dst, "w", newline="\n", encoding="utf-8") as f:
-        w = csv.DictWriter(f, fieldnames=COLS)
+        w = csv.DictWriter(f, lineterminator="\n", fieldnames=COLS)
         w.writeheader()
         w.writerows(out)
     from collections import Counter

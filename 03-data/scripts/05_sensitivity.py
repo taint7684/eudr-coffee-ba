@@ -34,7 +34,7 @@ def main():
     out.append({"district": "TỔNG", **{f"loss21_t{t}_ha": tot[t] for t in TH},
                 "ratio_t10_vs_t30": round(tot[10] / tot[30], 3)})
     with open(OUT, "w", newline="\n", encoding="utf-8") as f:
-        w = csv.DictWriter(f, fieldnames=list(out[0]))
+        w = csv.DictWriter(f, lineterminator="\n", fieldnames=list(out[0]))
         w.writeheader()
         w.writerows(out)
     print(out[-1])

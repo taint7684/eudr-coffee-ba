@@ -30,7 +30,7 @@ def split(s):
 
 def write(path, rows, cols):
     with open(path, "w", newline="\n", encoding="utf-8") as f:
-        w = csv.DictWriter(f, fieldnames=cols)
+        w = csv.DictWriter(f, lineterminator="\n", fieldnames=cols)
         w.writeheader()
         w.writerows(rows)
 

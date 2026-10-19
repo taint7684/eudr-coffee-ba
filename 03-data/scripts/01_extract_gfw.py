@@ -53,7 +53,7 @@ def main():
                 "source": "SRC-008 GFW country stats 2025_VNM.xlsx v20260427 (Hansen GFC, GADM 4.1)",
             })
     with open(OUT / "forest_loss_by_district.csv", "w", newline="\n", encoding="utf-8") as f:
-        w = csv.DictWriter(f, fieldnames=list(long_rows[0]))
+        w = csv.DictWriter(f, lineterminator="\n", fieldnames=list(long_rows[0]))
         w.writeheader()
         w.writerows(long_rows)
 
@@ -70,7 +70,7 @@ def main():
             "last_year": int(years[-1][-4:]),
         })
     with open(OUT / "forest_loss_district_summary.csv", "w", newline="\n", encoding="utf-8") as f:
-        w = csv.DictWriter(f, fieldnames=list(summ[0]))
+        w = csv.DictWriter(f, lineterminator="\n", fieldnames=list(summ[0]))
         w.writeheader()
         w.writerows(summ)
     for s in summ:

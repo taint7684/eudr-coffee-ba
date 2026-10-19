@@ -51,7 +51,7 @@ def main():
         })
     OUT.parent.mkdir(parents=True, exist_ok=True)
     with open(OUT, "w", newline="\n", encoding="utf-8") as fh:
-        w = csv.DictWriter(fh, fieldnames=list(out[0]))
+        w = csv.DictWriter(fh, lineterminator="\n", fieldnames=list(out[0]))
         w.writeheader()
         w.writerows(out)
     for r in out:

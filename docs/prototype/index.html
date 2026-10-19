@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ECTS Prototype</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+:root{--bg:#f5f6f4;--card:#fff;--ink:#1c2220;--mute:#5d6964;--line:#e2e6e3;--acc:#2f6f4f;--acc2:#e7f1ec;--ok:#2f7d4f;--warn:#b7791f;--bad:#b83b2e;--gray:#8a8f8c}
+*{box-sizing:border-box}html,body{height:100%}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.app{display:grid;grid-template-columns:232px 1fr;min-height:100%}
+aside{background:#17251f;color:#cfe0d7;padding:16px 10px;position:sticky;top:0;height:100vh}
+aside .brand{font-weight:700;color:#fff;font-size:17px;padding:4px 10px 2px}aside .tag{font-size:11.5px;color:#8fb3a1;padding:0 10px 14px}
+aside a{display:block;padding:8px 10px;border-radius:7px;color:#cfe0d7;text-decoration:none;margin-bottom:2px}
+aside a.on,aside a:hover{background:#244135;color:#fff}aside small{color:#7fa190;margin-left:4px}
+aside .role{margin:16px 10px 0;font-size:12px}aside select{width:100%;margin-top:4px;padding:6px;border-radius:6px;border:0}
+main{padding:20px 24px 40px;min-width:0}
+h1{font-size:20px;margin:0 0 2px;font-weight:650}.crumb{color:var(--mute);font-size:12.5px;margin-bottom:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px;margin-bottom:14px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.grow{flex:1}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}.grid3{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+@media (max-width:900px){.app{grid-template-columns:1fr}aside{position:static;height:auto}.grid2,.grid3{grid-template-columns:1fr}}
+input,select,textarea{font:inherit;padding:7px 9px;border:1px solid var(--line);border-radius:7px;background:#fff;color:var(--ink)}
+label.f{display:block;margin-bottom:10px}label.f span{display:block;font-size:12.5px;color:var(--mute);margin-bottom:3px}label.f input,label.f select,label.f textarea{width:100%}
+.req:after{content:" *";color:var(--bad)}
+button{font:inherit;padding:7px 13px;border-radius:7px;border:1px solid var(--line);background:#fff;cursor:pointer}
+button.p{background:var(--acc);border-color:var(--acc);color:#fff}button:disabled{opacity:.45;cursor:not-allowed}
+table{width:100%;border-collapse:collapse}th,td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{font-size:12px;color:var(--mute);font-weight:550;background:#fafbfa;position:sticky;top:0}
+.tw{max-height:460px;overflow:auto;border:1px solid var(--line);border-radius:8px}
+tr.click{cursor:pointer}tr.click:hover{background:var(--acc2)}
+.b{display:inline-block;padding:1px 8px;border-radius:99px;font-size:12px;font-weight:550;white-space:nowrap}
+.b.ok{background:#e3f2e8;color:var(--ok)}.b.warn{background:#fbf0dc;color:var(--warn)}.b.bad{background:#f8e1de;color:var(--bad)}.b.gray{background:#eceeed;color:#555}.b.info{background:#e4edf7;color:#2c5d8f}
+.msg{padding:8px 11px;border-radius:7px;margin:8px 0;font-size:13.5px}.msg.err{background:#f8e1de;color:#7d241b}.msg.warn{background:#fbf0dc;color:#7a5212}.msg.ok{background:#e3f2e8;color:#1f5a37}
+.kpi .v{font-size:24px;font-weight:650}.kpi .l{font-size:12.5px;color:var(--mute)}
+.map{height:340px;border-radius:8px;border:1px solid var(--line)}
+.mute{color:var(--mute)}.mono{font-family:ui-monospace,Consolas,monospace;font-size:12.5px}
+.check li{margin:3px 0;list-style:none}.check{padding-left:0}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.35);display:none;align-items:center;justify-content:center;z-index:2000}
+.modal.on{display:flex}.modal .card{width:min(520px,94vw);max-height:90vh;overflow:auto}
+.denied{text-align:center;padding:50px 10px;color:var(--mute)}
+.synth{font-size:11px;color:#8fb3a1;padding:12px 10px 0}
+</style>
+</head>
+<body>
+<div class="app">
+<aside>
+  <div class="brand">ECTS</div><div class="tag">EUDR Coffee Traceability System</div>
+  <nav id="nav"></nav>
+  <div class="role">Vai trò đăng nhập (mô phỏng)
+    <select id="role"><option>Tuân thủ</option><option>Đại lý</option><option>Thu mua</option><option>Quản lý</option></select></div>
+  <div class="synth">Prototype · dữ liệu giả lập (SYNTHETIC) · kết quả chấm lô mới là mô phỏng</div>
+</aside>
+<main id="main"></main>
+</div>
+<div class="modal" id="modal"><div class="card" id="modalBody"></div></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="data.js"></script>
+<script>
+// ===== State =====
+const S = {
+  farmers: SYN.farmers, plots: SYN.plots.map(p => ({...p, area_declared_ha: +p.area_declared_ha})),
+  txns: SYN.txns.map(t => ({...t, net_kg: +t.net_kg, receipt: null})),
+  receipts: [], shipments: [], audit: [],
+  params: {eudr_apply_date: '2026-12-30', buffer_m: 50, forest_overlap_min: 10, area_tolerance: 20, max_yield_t_ha: 3.5, dds_ref_alert_days: 5, grayzone_sla_days: 14, map_version: 'GFC2020-V3 + Hansen-v1.13'},
+  today: new Date('2026-12-08'), role: 'Tuân thủ', agent: 'DL-01'
+};
+// Ngay vao Vung xam (gia lap, on dinh theo ma lo)
+S.plots.forEach((p, i) => { if (p.risk_status === 'Vùng xám') p.gray_since = new Date(S.today - ((i * 7) % 22) * 864e5); });
+const AG = [...new Set(S.farmers.map(f => f.agent_id))].sort().map((id, i) => ({id, name: 'Đại lý ' + ['Ea Kiết', 'Pơng Drang', 'Krông Năng', 'Ea Wy', 'Ea Kly', 'Liên Sơn', 'Quảng Hiệp', 'Cư Pơng', 'Phú Xuân', "Ea H'leo", 'Krông Pắc', 'Đắk Liêng'][i], email: id.toLowerCase() + '@dakcoffee.example', address: 'Đắk Lắk'}));
+const fmt = n => Number(n).toLocaleString('vi-VN'); const d2 = d => new Date(d).toLocaleDateString('vi-VN');
+const $ = s => document.querySelector(s); const byId = (arr, k, v) => arr.find(x => x[k] === v);
+const farmerOf = p => byId(S.farmers, 'farmer_id', p.farmer_id);
+const eligible = p => p.risk_status === 'Đạt' && p.legal_status === 'Đủ';
+const badge = s => `<span class="b ${({'Đạt': 'ok', 'Đủ': 'ok', 'Được chấp nhận': 'ok', 'Vùng xám': 'warn', 'Mâu thuẫn': 'warn', 'Sẵn sàng': 'info', 'Đã gửi': 'info', 'Loại': 'bad', 'Thiếu': 'bad', 'Bị từ chối': 'bad'})[s] || 'gray'}">${s}</span>`;
+function log(entity, id, action, before, after) { S.audit.unshift({at: new Date().toLocaleString('vi-VN'), user: S.role, entity, id, action, before: before ?? '', after: after ?? ''}); }
+function modal(html) { $('#modalBody').innerHTML = html; $('#modal').classList.add('on'); }
+function closeModal() { $('#modal').classList.remove('on'); }
+$('#modal').onclick = e => { if (e.target.id === 'modal') closeModal(); };
+
+// Seed: phieu nhap + 1 lo hang mau
+(function seed() {
+  let n = 0;
+  AG.forEach(a => { const eu = S.txns.filter(t => t.agent_id === a.id && t.stream === 'EU' && t.txn_date < '2027-01-01');
+    if (eu.length) { n++; const id = 'PN-' + String(n).padStart(4, '0'); const kg = eu.reduce((s, t) => s + t.net_kg, 0);
+      eu.forEach(t => t.receipt = id); S.receipts.push({id, agent: a.id, date: '2026-12-31', stream: 'EU', total: kg, remaining: kg, txns: eu.map(t => t.txn_id)}); } });
+  S.shipments.push({id: 'SH-2026-014', contract: 'DC-EU-0142', importer: 'Hamburg Kaffee Import GmbH (giả định)', hs: '0901', eta: '2026-12-12', status: 'Nháp', alloc: [], ref: '', reason: '', history: [['Nháp', '01/12/2026']]});
+})();
+
+// ===== Permissions (S15 permissions.md, rút gọn) =====
+const PERM = {SCR01: ['Đại lý', 'Thu mua', 'Tuân thủ', 'Quản lý'], SCR02: ['Đại lý', 'Tuân thủ'], SCR03: ['Đại lý', 'Tuân thủ', 'Quản lý'], SCR04: ['Đại lý', 'Thu mua', 'Tuân thủ', 'Quản lý'], SCR05: ['Thu mua', 'Tuân thủ', 'Quản lý'], SCR06: ['Thu mua', 'Tuân thủ', 'Quản lý'], SCR07: ['Tuân thủ', 'Quản lý']};
+const SCREENS = [['SCR01', 'Nông hộ & lô đất'], ['SCR02', 'Đăng ký lô'], ['SCR03', 'Chấm rủi ro & Vùng xám'], ['SCR04', 'Thu mua'], ['SCR05', 'Lô hàng & gói DDS'], ['SCR06', 'Dashboard'], ['SCR07', 'Quản trị']];
+let cur = 'SCR01', mapObj = null;
+function nav() { $('#nav').innerHTML = SCREENS.map(([k, t]) => `<a href="#${k}" class="${k === cur ? 'on' : ''}">${t}<small>${k.replace('SCR', 'SCR-')}</small></a>`).join(''); }
+function go(k, arg) { cur = k; location.hash = k; nav(); if (mapObj) { mapObj.remove(); mapObj = null; }
+  if (!PERM[k].includes(S.role)) { $('#main').innerHTML = `<div class="card denied"><h1>Không có quyền</h1><p>Vai trò ${S.role} không được truy cập màn này (AC-030.1). Liên hệ quản trị hệ thống.</p></div>`; return; }
+  R[k](arg); window.scrollTo(0, 0); }
+window.onhashchange = () => { const k = location.hash.slice(1); if (k && k !== cur && R[k]) go(k); };
+$('#role').onchange = e => { S.role = e.target.value; go(cur); };
+const visiblePlots = () => S.role === 'Đại lý' ? S.plots.filter(p => farmerOf(p).agent_id === S.agent) : S.plots;
+const head = (t, c) => `<h1>${t}</h1><div class="crumb">${c}</div>`;
+
+// ===== Geometry helpers =====
+const toM = (lat) => [110540, 111320 * Math.cos(lat * Math.PI / 180)];
+function areaHa(pts) { if (pts.length < 3) return 0; const lat0 = pts[0][0], [ky, kx] = toM(lat0); let a = 0;
+  for (let i = 0; i < pts.length; i++) { const [y1, x1] = pts[i], [y2, x2] = pts[(i + 1) % pts.length]; a += (x1 * kx) * (y2 * ky) - (x2 * kx) * (y1 * ky); } return Math.abs(a) / 2 / 1e4; }
+function segX(a, b, c, d) { const o = (p, q, r) => Math.sign((q[1] - p[1]) * (r[0] - q[0]) - (q[0] - p[0]) * (r[1] - q[1])); return o(a, b, c) !== o(a, b, d) && o(c, d, a) !== o(c, d, b); }
+function selfIntersects(pts) { const n = pts.length; for (let i = 0; i < n; i++) for (let j = i + 1; j < n; j++) { if (Math.abs(i - j) <= 1 || (i === 0 && j === n - 1)) continue; if (segX(pts[i], pts[(i + 1) % n], pts[j], pts[(j + 1) % n])) return true; } return false; }
+function inPoly(pt, poly) { let c = false; for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) { const [yi, xi] = poly[i], [yj, xj] = poly[j]; if (((yi > pt[0]) !== (yj > pt[0])) && (pt[1] < (xj - xi) * (pt[0] - yi) / (yj - yi) + xi)) c = !c; } return c; }
+const decimals = v => (String(v).split('.')[1] || '').length;
+const plotLatLngs = p => p.geometry.type === 'Point' ? [[p.geometry.coordinates[1], p.geometry.coordinates[0]]] : p.geometry.coordinates[0].slice(0, -1).map(c => [c[1], c[0]]);
+function overlapShare(pts, other) { // ty le diem mau cua lo moi nam trong lo khac
+  if (pts.length < 3 || other.geometry.type !== 'Polygon') return 0; const op = plotLatLngs(other);
+  const lats = pts.map(p => p[0]), lngs = pts.map(p => p[1]); let tot = 0, hit = 0;
+  for (let i = 0; i <= 20; i++) for (let j = 0; j <= 20; j++) { const q = [Math.min(...lats) + (Math.max(...lats) - Math.min(...lats)) * i / 20, Math.min(...lngs) + (Math.max(...lngs) - Math.min(...lngs)) * j / 20];
+    if (inPoly(q, pts)) { tot++; if (inPoly(q, op)) hit++; } } return tot ? hit / tot : 0; }
+function scorePlot(ov, lossPost, lossInOv, dist) { const P = S.params; // SRS 4.1
+  if (ov >= P.forest_overlap_min && lossPost && lossInOv) return ['Loại', 'R4']; if (ov >= P.forest_overlap_min) return ['Vùng xám', 'R3'];
+  if (lossPost) return ['Vùng xám', 'R2']; if (dist < P.buffer_m) return ['Vùng xám', 'R5']; return ['Đạt', 'R1']; }
+const RULE_TXT = {R1: 'Không giao rừng 2020, không mất cây che phủ sau 2020, ngoài vùng đệm', R2: 'Có mất cây che phủ sau 31/12/2020 trong lô (đất không phải rừng 2020) — cần ảnh lịch sử', R3: 'Lô giao rừng 2020 ≥ ngưỡng — có thể là nông lâm kết hợp bị nhận nhầm', R4: 'Giao rừng 2020 và có mất cây che phủ sau 2020 trong phần giao', R5: 'Cách vùng mất/rìa rừng dưới vùng đệm'};
+
+// ===== Screens =====
+const R = {};
+R.SCR01 = function () {
+  const ds = [...new Set(S.plots.map(p => p.district_old))].sort();
+  $('#main').innerHTML = head('Nông hộ & lô đất', 'SCR-01 · FR-001, FR-007 · US-001') + `
+  <div class="card"><div class="row">
+    <input id="q" class="grow" placeholder="Tìm mã lô, tên nông hộ">
+    <select id="fd"><option value="">Mọi huyện (cũ)</option>${ds.map(d => `<option>${d}</option>`).join('')}</select>
+    <select id="fr"><option value="">Mọi kết quả chấm</option><option>Đạt</option><option>Vùng xám</option><option>Loại</option><option>Chờ chấm</option></select>
+    <select id="fl"><option value="">Mọi tình trạng pháp lý</option><option>Đủ</option><option>Thiếu</option><option>Mâu thuẫn</option></select>
+    ${S.role === 'Đại lý' ? '<button class="p" id="addF">+ Thêm nông hộ</button><button id="addP">+ Thêm lô</button>' : ''}
+    ${S.role === 'Tuân thủ' ? '<button id="imp">Nhập hàng loạt</button>' : ''}
+  </div></div>
+  <div class="card"><div class="mute" id="cnt" style="margin-bottom:8px"></div><div class="tw"><table><thead><tr><th>Mã lô</th><th>Nông hộ</th><th>Xã (mới)</th><th>Huyện (cũ)</th><th>Diện tích (ha)</th><th>Hình học</th><th>Kết quả chấm</th><th>Pháp lý</th></tr></thead><tbody id="tb"></tbody></table></div></div>`;
+  const draw = () => { const q = $('#q').value.toLowerCase(), d = $('#fd').value, r = $('#fr').value, l = $('#fl').value;
+    const rows = visiblePlots().filter(p => (!d || p.district_old === d) && (!r || p.risk_status === r) && (!l || p.legal_status === l) && (!q || (p.plot_id + farmerOf(p).full_name).toLowerCase().includes(q)));
+    $('#cnt').textContent = `${fmt(rows.length)} lô`;
+    $('#tb').innerHTML = rows.slice(0, 400).map(p => `<tr class="click" data-id="${p.plot_id}"><td class="mono">${p.plot_id}</td><td>${farmerOf(p).full_name}</td><td>${p.commune_new}</td><td>${p.district_old}</td><td>${(+p.area_declared_ha).toFixed(2)}</td><td>${p.geometry.type === 'Point' ? 'Điểm' : 'Đa giác'}</td><td>${badge(p.risk_status)}</td><td>${badge(p.legal_status)}</td></tr>`).join('');
+    document.querySelectorAll('#tb tr').forEach(tr => tr.onclick = () => go('SCR03', tr.dataset.id)); };
+  ['q', 'fd', 'fr', 'fl'].forEach(id => $('#' + id).oninput = draw); draw();
+  if ($('#addF')) $('#addF').onclick = farmerForm; if ($('#addP')) $('#addP').onclick = () => go('SCR02');
+  if ($('#imp')) $('#imp').onclick = () => modal(`<h1>Nhập hàng loạt (FR-007)</h1><p class="mute">Tải tệp GeoJSON/CSV theo mẫu. Bản prototype minh họa kết quả kiểm tra.</p><div class="msg ok">Tệp mẫu: 120 dòng — 117 lô hợp lệ được tạo ở trạng thái Chờ chấm.</div><div class="msg err">3 dòng lỗi: dòng 14, 57, 88 — Lô trên 4 ha cần đa giác ranh giới (BR-002).</div><button onclick="closeModal()">Đóng</button>`);
+};
+function farmerForm() {
+  modal(`<h1>Thêm nông hộ</h1><div class="crumb">FR-001 · BR-006</div>
+  <label class="f"><span class="req">Họ tên</span><input id="fn"></label>
+  <div class="grid2"><label class="f"><span>Năm sinh</span><input id="fy" type="number"></label><label class="f"><span class="req">Điện thoại</span><input id="fp"></label></div>
+  <label class="f"><span>Số định danh (12 số)</span><input id="fi"></label>
+  <label class="f"><span class="req">Xã (mới)</span><select id="fc"><option value="">— chọn —</option>${[...new Set(S.farmers.map(f => f.commune_new))].sort().map(c => `<option>${c}</option>`).join('')}</select></label>
+  <label><input type="checkbox" id="fok"> Nông hộ đồng ý cho DN thu thập và xử lý dữ liệu cá nhân theo điều khoản v1.0 <span class="req"></span></label>
+  <div id="ferr"></div><div class="row" style="margin-top:12px"><button class="p" id="fs">Lưu</button><button onclick="closeModal()">Hủy</button></div>`);
+  $('#fs').onclick = () => { const e = [], n = $('#fn').value.trim(), p = $('#fp').value.trim(), y = +$('#fy').value, id = $('#fi').value.trim();
+    if (!n) e.push('Nhập họ tên'); if (!/^0\d{9}$/.test(p)) e.push('Số điện thoại không hợp lệ'); if (y && (y < 1930 || y > 2026)) e.push('Năm sinh không hợp lệ');
+    if (id && !/^\d{12}$/.test(id)) e.push('Số định danh gồm 12 chữ số'); if (!$('#fc').value) e.push('Chọn xã'); if (!$('#fok').checked) e.push('Cần đồng ý xử lý dữ liệu cá nhân (BR-006)');
+    if (e.length) { $('#ferr').innerHTML = e.map(x => `<div class="msg err">${x}</div>`).join(''); return; }
+    const dup = S.farmers.find(f => f.phone === p && f.commune_new === $('#fc').value);
+    const fid = 'NH-' + String(S.farmers.length + 1).padStart(5, '0');
+    S.farmers.push({farmer_id: fid, full_name: n, birth_year: y || '', phone: p, commune_new: $('#fc').value, district_old: (S.farmers.find(f => f.commune_new === $('#fc').value) || {}).district_old, agent_id: S.agent, consent: 'Có', consent_at: '2026-12-08'});
+    log('Nông hộ', fid, 'Tạo + đồng ý dữ liệu v1.0', '', n); closeModal();
+    modal(`<div class="msg ok">Đã tạo ${fid}.</div>${dup ? `<div class="msg warn">Cảnh báo có thể trùng: ${dup.farmer_id} ${dup.full_name} cùng số điện thoại trong xã (AC-001.3).</div>` : ''}<button onclick="closeModal()">Đóng</button>`); };
+}
+
+R.SCR02 = function () {
+  const fs = S.role === 'Đại lý' ? S.farmers.filter(f => f.agent_id === S.agent) : S.farmers;
+  $('#main').innerHTML = head('Đăng ký lô', 'SCR-02 · FR-002…005 · BR-001…005, BR-020') + `
+  <div class="grid2"><div class="card">
+    <label class="f"><span class="req">Nông hộ</span><select id="pf">${fs.map(f => `<option value="${f.farmer_id}">${f.farmer_id} — ${f.full_name} (${f.commune_new})</option>`).join('')}</select></label>
+    <label class="f"><span class="req">Diện tích khai báo (ha)</span><input id="pa" type="number" step="0.01" value="1.20"></label>
+    <div class="row" style="margin-bottom:10px"><button id="mPt">Lấy điểm GPS</button><button id="mPg">Vẽ đa giác</button><button id="mClr">Xóa hình</button></div>
+    <div class="mute" id="mode">Chế độ: điểm — bấm lên bản đồ để đặt điểm (mô phỏng GPS).</div>
+    <div class="msg" id="geo" style="background:#f3f5f4"></div>
+    <div class="grid2"><label class="f"><span>Loại giấy tờ</span><select id="dt"><option>GCN QSDĐ</option><option>Xác nhận UBND xã</option><option>Không có</option></select></label>
+    <label class="f"><span>Số giấy tờ</span><input id="dn" value="CS"></label></div>
+    <label class="f"><span>Diện tích trên giấy (ha)</span><input id="dA" type="number" step="0.01"></label>
+    <label class="f"><span>Lý do lệch diện tích (khi lệch &gt; ${S.params.area_tolerance}%)</span><select id="why"><option value="">—</option><option>Đo GPS sai số</option><option>Ranh thực tế khác khai báo</option><option>Khai báo ước lượng</option></select></label>
+    <div id="perr"></div><button class="p" id="ps">Lưu → Chờ chấm</button>
+  </div><div class="card"><div id="pmap" class="map" style="height:520px"></div><div class="mute" style="margin-top:6px">Lô đã đăng ký hiển thị viền xám; lô trùng tô đỏ.</div></div></div>`;
+  const f0 = byId(S.farmers, 'farmer_id', $('#pf').value), p0 = S.plots.find(p => p.farmer_id === f0.farmer_id) || S.plots[0];
+  mapObj = L.map('pmap').setView(plotLatLngs(p0)[0], 15);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution: '© OpenStreetMap', maxZoom: 19}).addTo(mapObj);
+  S.plots.forEach(p => { if (p.geometry.type === 'Polygon') L.polygon(plotLatLngs(p), {color: '#888', weight: 1, fillOpacity: .05}).addTo(mapObj); else L.circleMarker(plotLatLngs(p)[0], {radius: 3, color: '#888'}).addTo(mapObj); });
+  let mode = 'pt', pts = [], shape = null, hl = null;
+  const area = () => +$('#pa').value;
+  function render() { if (shape) mapObj.removeLayer(shape); shape = null; if (hl) { mapObj.removeLayer(hl); hl = null; }
+    if (mode === 'pt' && pts[0]) shape = L.marker(pts[0]).addTo(mapObj);
+    if (mode === 'pg' && pts.length) shape = (pts.length > 2 ? L.polygon(pts, {color: '#2f6f4f'}) : L.polyline(pts, {color: '#2f6f4f'})).addTo(mapObj);
+    const m = []; const a = area();
+    if (a > 4) $('#mPt').disabled = true, m.push(`<b>Lô ${a} ha &gt; 4 ha:</b> bắt buộc đa giác (BR-002).`); else $('#mPt').disabled = false;
+    if (mode === 'pg' && pts.length > 2) { const c = areaHa(pts); const dev = Math.abs(c - a) / a * 100;
+      m.push(`Diện tích tính: <b>${c.toFixed(2)} ha</b> · lệch ${dev.toFixed(0)}% ${dev > S.params.area_tolerance ? '<span class="b warn">vượt dung sai — chọn lý do (BR-004)</span>' : ''}`);
+      if (selfIntersects(pts)) m.push('<span class="b bad">Đa giác tự cắt (BR-003)</span>');
+      const clash = S.plots.map(p => [p, overlapShare(pts, p)]).filter(x => x[1] > .10)[0];
+      if (clash) { m.push(`<span class="b bad">Chồng ${Math.round(clash[1] * 100)}% lên ${clash[0].plot_id} (BR-005)</span>`); hl = L.polygon(plotLatLngs(clash[0]), {color: '#b83b2e', fillOpacity: .35}).addTo(mapObj); } }
+    if (pts[0]) m.push(`Tọa độ: <span class="mono">${pts.map(p => p.map(v => v.toFixed(6)).join(', ')).slice(0, 3).join(' · ')}${pts.length > 3 ? ' …' : ''}</span> (≥ 6 chữ số thập phân, BR-001)`);
+    $('#geo').innerHTML = m.join('<br>') || 'Chưa có hình học.'; }
+  $('#pa').oninput = () => { if (area() > 4 && mode === 'pt') { mode = 'pg'; pts = []; $('#mode').textContent = 'Chế độ: đa giác — bấm lần lượt các đỉnh trên ranh lô.'; } render(); };
+  $('#mPt').onclick = () => { mode = 'pt'; pts = []; $('#mode').textContent = 'Chế độ: điểm — bấm lên bản đồ để đặt điểm (mô phỏng GPS).'; render(); };
+  $('#mPg').onclick = () => { mode = 'pg'; pts = []; $('#mode').textContent = 'Chế độ: đa giác — bấm lần lượt các đỉnh trên ranh lô.'; render(); };
+  $('#mClr').onclick = () => { pts = []; render(); };
+  mapObj.on('click', e => { const p = [+e.latlng.lat.toFixed(6), +e.latlng.lng.toFixed(6)]; if (mode === 'pt') pts = [p]; else pts.push(p); render(); });
+  render();
+  $('#ps').onclick = () => { const e = [], a = area();
+    if (!(a > 0)) e.push('Diện tích phải lớn hơn 0'); if (!pts.length) e.push('Chưa có hình học');
+    if (a > 4 && mode !== 'pg') e.push('Lô trên 4 ha cần đa giác ranh giới (BR-002)');
+    if (mode === 'pg' && pts.length < 3) e.push('Đa giác cần ít nhất 3 đỉnh (BR-003)');
+    if (mode === 'pg' && pts.length > 2 && selfIntersects(pts)) e.push('Đa giác tự cắt (BR-003)');
+    if (mode === 'pg' && pts.length > 2 && S.plots.some(p => overlapShare(pts, p) > .10)) e.push('Lô chồng lấn > 10% lên lô đã đăng ký (BR-005)');
+    if (mode === 'pg' && pts.length > 2 && Math.abs(areaHa(pts) - a) / a * 100 > S.params.area_tolerance && !$('#why').value) e.push('Chọn lý do lệch diện tích (BR-004)');
+    if ($('#dt').value !== 'Không có' && $('#dn').value.trim().length < 3) e.push('Nhập số giấy tờ');
+    if (e.length) { $('#perr').innerHTML = e.map(x => `<div class="msg err">${x}</div>`).join(''); return; }
+    const f = byId(S.farmers, 'farmer_id', $('#pf').value), id = 'LO-' + String(S.plots.length + 1).padStart(5, '0');
+    const geom = mode === 'pt' ? {type: 'Point', coordinates: [pts[0][1], pts[0][0]]} : {type: 'Polygon', coordinates: [[...pts, pts[0]].map(p => [p[1], p[0]])]};
+    let legal = 'Đủ'; if ($('#dt').value === 'Không có') legal = 'Thiếu'; else if (+$('#dA').value && Math.abs(+$('#dA').value - a) / +$('#dA').value * 100 > S.params.area_tolerance) legal = 'Mâu thuẫn';
+    // Cham mo phong: gia tri on dinh theo toa do (khong phai du lieu ve tinh that)
+    const h = Math.abs(Math.sin(pts[0][0] * 1e4 + pts[0][1] * 1e4)); const ov = h > .93 ? 25 : 0, lp = h > .86, lio = h > .96, dist = Math.round(h * 400);
+    const [res, rule] = scorePlot(ov, lp, lio, dist);
+    const p = {plot_id: id, farmer_id: f.farmer_id, district_old: f.district_old, commune_new: f.commune_new, area_declared_ha: a, geometry: geom, geometry_type: geom.type, area_computed_ha: mode === 'pg' ? areaHa(pts).toFixed(2) : '', gps_accuracy_m: 6.5, forest2020_overlap_pct: ov, loss_post2020: lp ? 'Có' : 'Không', min_dist_m: dist, risk_rule: rule, risk_status: res, doc_type: $('#dt').value, doc_number: $('#dn').value, area_on_doc_ha: $('#dA').value, legal_status: legal, map_version: S.params.map_version, gray_since: res === 'Vùng xám' ? S.today : null};
+    S.plots.push(p); log('Lô đất', id, 'Tạo + chấm tự động', '', `${res} (${rule}) · pháp lý ${legal}`);
+    modal(`<h1>Đã lưu ${id}</h1><p>Chấm tự động (mô phỏng): ${badge(res)} · quy tắc ${rule}. Pháp lý: ${badge(legal)}.</p><div class="row"><button class="p" onclick="closeModal();go('SCR03','${id}')">Xem kết quả chấm</button><button onclick="closeModal();go('SCR02')">Đăng ký lô khác</button></div>`); };
+};
+
+R.SCR03 = function (pid) {
+  const vis = visiblePlots(); const q = vis.filter(p => p.risk_status === 'Vùng xám').map(p => ({p, age: Math.floor((S.today - new Date(p.gray_since)) / 864e5)})).sort((a, b) => b.age - a.age);
+  const sel = pid ? byId(S.plots, 'plot_id', pid) : (q[0] || {}).p;
+  $('#main').innerHTML = head('Chấm rủi ro & Vùng xám', 'SCR-03 · FR-008, FR-010, FR-011 · BR-010…016, BR-020, BR-021') + `
+  <div class="grid2"><div class="card"><h1 style="font-size:15px">Hàng đợi Vùng xám <span class="mute">(${q.length} lô · SLA ${S.params.grayzone_sla_days} ngày)</span></h1>
+    <div class="tw" style="max-height:600px"><table><thead><tr><th>Mã lô</th><th>Quy tắc</th><th>Nông hộ</th><th>Còn lại</th></tr></thead><tbody>${q.map(({p, age}) => { const left = S.params.grayzone_sla_days - age;
+      return `<tr class="click" data-id="${p.plot_id}" style="${p.plot_id === (sel || {}).plot_id ? 'background:var(--acc2)' : ''}"><td class="mono">${p.plot_id}</td><td>${p.risk_rule}</td><td>${farmerOf(p).full_name}</td><td>${left < 0 ? `<span class="b bad">Quá hạn ${-left} ngày</span>` : left + ' ngày'}</td></tr>`; }).join('')}</tbody></table></div></div>
+  <div class="card" id="det"></div></div>`;
+  document.querySelectorAll('tr.click').forEach(tr => tr.onclick = () => go('SCR03', tr.dataset.id));
+  if (!sel) { $('#det').innerHTML = '<p class="mute">Chọn một lô.</p>'; return; }
+  const ll = plotLatLngs(sel);
+  $('#det').innerHTML = `<div class="row"><h1 class="grow" style="font-size:16px">${sel.plot_id} · ${farmerOf(sel).full_name}</h1>${badge(sel.risk_status)} ${badge(sel.legal_status)}</div>
+    <div id="dmap" class="map" style="margin:10px 0"></div>
+    <table><tr><td>Quy tắc</td><td><b>${sel.risk_rule}</b> — ${RULE_TXT[sel.risk_rule] || ''}</td></tr><tr><td>Giao rừng 2020</td><td>${sel.forest2020_overlap_pct}% (ngưỡng ${S.params.forest_overlap_min}%)</td></tr>
+    <tr><td>Mất cây che phủ sau 31/12/2020</td><td>${sel.loss_post2020}</td></tr><tr><td>Cách vùng mất/rìa rừng</td><td>${sel.min_dist_m} m (vùng đệm ${S.params.buffer_m} m)</td></tr>
+    <tr><td>Diện tích · hình học</td><td>${(+sel.area_declared_ha).toFixed(2)} ha · ${sel.geometry.type === 'Point' ? 'Điểm' : 'Đa giác'} · GPS ±${sel.gps_accuracy_m} m</td></tr>
+    <tr><td>Giấy tờ</td><td>${sel.doc_type} ${sel.doc_number || ''} ${sel.area_on_doc_ha ? '· ' + sel.area_on_doc_ha + ' ha trên giấy' : ''}</td></tr><tr><td>Phiên bản dữ liệu</td><td class="mono">${sel.map_version}</td></tr></table>
+    ${sel.verified ? `<div class="msg ok">Đã xác minh: ${sel.verified}</div>` : ''}
+    ${sel.risk_status === 'Vùng xám' && S.role === 'Tuân thủ' ? `<h1 style="font-size:15px;margin-top:14px">Quyết định xác minh (BR-016)</h1>
+      <div class="grid2"><label class="f"><span class="req">Phương pháp</span><select id="vm"><option>Ảnh lịch sử</option><option>Thực địa</option></select></label><label class="f"><span class="req">Ngày của bằng chứng</span><input id="vd" type="date"></label></div>
+      <label class="f"><span class="req">Bằng chứng (tệp/ảnh)</span><input id="ve" type="file"></label>
+      <div class="grid2"><label class="f"><span class="req">Quyết định</span><select id="vx"><option value="">—</option><option>Đạt</option><option>Loại</option></select></label><label class="f"><span class="req">Lý do</span><input id="vr"></label></div>
+      <div id="verr"></div><div class="row"><button class="p" id="vs">Ghi quyết định</button><button id="vt">Giao khảo sát cho đại lý</button></div>` : ''}
+    ${sel.risk_status === 'Vùng xám' && S.role === 'Đại lý' ? `<div class="msg warn">Nhiệm vụ khảo sát: đến lô, chụp ảnh tại vị trí (≤ 100 m từ lô) và gửi (AC-012).</div><button class="p" onclick="modal('<div class=\\'msg ok\\'>Đã gửi 3 ảnh kèm tọa độ và thời điểm chụp.</div><button onclick=closeModal()>Đóng</button>')">Gửi ảnh khảo sát</button>` : ''}`;
+  mapObj = L.map('dmap').setView(ll[0], 16);
+  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {attribution: 'Esri World Imagery', maxZoom: 19}).addTo(mapObj);
+  const lay = sel.geometry.type === 'Point' ? L.circleMarker(ll[0], {radius: 8, color: '#fff', fillColor: '#2f6f4f', fillOpacity: 1}) : L.polygon(ll, {color: '#fff', weight: 2, fillColor: '#2f6f4f', fillOpacity: .3});
+  lay.addTo(mapObj); L.circle(ll[0], {radius: S.params.buffer_m + 60, color: '#d99a2b', weight: 1, dashArray: '4 4', fill: false}).addTo(mapObj).bindTooltip('Vùng đệm');
+  if (+sel.forest2020_overlap_pct > 0) L.circle([ll[0][0] + .0006, ll[0][1] + .0004], {radius: 90, color: '#1b7837', fillOpacity: .35}).addTo(mapObj).bindTooltip('Rừng 2020 (minh họa)');
+  if (sel.loss_post2020 === 'Có' || +sel.min_dist_m < S.params.buffer_m) L.circle([ll[0][0] - .0003, ll[0][1] + .0005], {radius: 25, color: '#d6604d', fillOpacity: .6}).addTo(mapObj).bindTooltip('Mất cây che phủ sau 2020 (minh họa)');
+  if ($('#vs')) $('#vs').onclick = () => { const e = [], dt = $('#vd').value;
+    if (!$('#ve').files.length) e.push('Cần ít nhất một bằng chứng (BR-016)'); if (!dt) e.push('Nhập ngày của bằng chứng'); if (!$('#vx').value) e.push('Chọn quyết định'); if (!$('#vr').value.trim()) e.push('Nhập lý do');
+    if (sel.risk_rule === 'R4' && $('#vx').value === 'Đạt' && dt > '2020-12-31') e.push('Bằng chứng sau mốc 31/12/2020 không đủ chứng minh đã canh tác trước mốc');
+    if (e.length) { $('#verr').innerHTML = e.map(x => `<div class="msg err">${x}</div>`).join(''); return; }
+    const b = sel.risk_status; sel.risk_status = $('#vx').value; sel.verified = `${$('#vm').value} ${d2(dt)} — ${$('#vr').value}`; log('Lô đất', sel.plot_id, 'Quyết định Vùng xám', b, sel.risk_status); go('SCR03', sel.plot_id); };
+  if ($('#vt')) $('#vt').onclick = () => { log('Lô đất', sel.plot_id, 'Giao khảo sát', '', farmerOf(sel).agent_id); modal(`<div class="msg ok">Đã giao khảo sát cho ${farmerOf(sel).agent_id}.</div><button onclick="closeModal()">Đóng</button>`); };
+};
+
+R.SCR04 = function () {
+  const fs = S.role === 'Đại lý' ? S.farmers.filter(f => f.agent_id === S.agent) : S.farmers;
+  const rec = S.txns.filter(t => S.role !== 'Đại lý' || t.agent_id === S.agent).slice(-60).reverse();
+  $('#main').innerHTML = head('Thu mua', 'SCR-04 · FR-013, FR-014 · BR-030…032') + `
+  <div class="grid2"><div class="card"><h1 style="font-size:15px">Ghi giao dịch</h1>
+    <label class="f"><span class="req">Nông hộ</span><select id="tf">${fs.map(f => `<option value="${f.farmer_id}">${f.farmer_id} — ${f.full_name}</option>`).join('')}</select></label>
+    <label class="f"><span class="req">Lô</span><select id="tp"></select></label><div id="tinfo"></div>
+    <div class="grid2"><label class="f"><span class="req">Ngày</span><input id="td" type="date" value="2026-12-08"></label><label class="f"><span class="req">Khối lượng (kg)</span><input id="tk" type="number" value="1500"></label></div>
+    <label class="f"><span class="req">Dòng</span><select id="ts"><option>EU</option><option>Khác</option></select></label>
+    <div id="terr"></div><button class="p" id="tsave" ${S.role === 'Đại lý' ? '' : 'disabled title="Chỉ Đại lý ghi giao dịch"'}>Lưu giao dịch</button></div>
+  <div class="card"><h1 style="font-size:15px">Lập phiếu nhập kho DN</h1>
+    <label class="f"><span class="req">Đại lý</span><select id="ra">${AG.map(a => `<option value="${a.id}">${a.id} — ${a.name}</option>`).join('')}</select></label>
+    <div id="rinfo" class="mute"></div><button class="p" id="rsave" ${S.role === 'Thu mua' ? '' : 'disabled title="Chỉ Thu mua lập phiếu nhập"'}>Lập phiếu nhập dòng EU</button>
+    <h1 style="font-size:15px;margin-top:16px">Phiếu nhập</h1><div class="tw" style="max-height:220px"><table><tr><th>Phiếu</th><th>Đại lý</th><th>Dòng</th><th>Tổng (kg)</th><th>Còn lại (kg)</th></tr>${S.receipts.map(r => `<tr><td class="mono">${r.id}</td><td>${r.agent}</td><td>${r.stream}</td><td>${fmt(r.total)}</td><td>${fmt(r.remaining)}</td></tr>`).join('')}</table></div></div></div>
+  <div class="card"><h1 style="font-size:15px">Giao dịch gần nhất</h1><div class="tw" style="max-height:300px"><table><tr><th>Mã</th><th>Ngày</th><th>Lô</th><th>Nông hộ</th><th>Đại lý</th><th>kg</th><th>Dòng</th><th>Phiếu nhập</th></tr>${rec.map(t => `<tr><td class="mono">${t.txn_id}</td><td>${d2(t.txn_date)}</td><td class="mono">${t.plot_id}</td><td>${byId(S.farmers, 'farmer_id', t.farmer_id).full_name}</td><td>${t.agent_id}</td><td>${fmt(t.net_kg)}</td><td>${t.stream}</td><td class="mono">${t.receipt || '—'}</td></tr>`).join('')}</table></div></div>`;
+  const sold = pid => S.txns.filter(t => t.plot_id === pid && t.season === '2026/27').reduce((s, t) => s + t.net_kg, 0);
+  function plotsOf() { const ps = S.plots.filter(p => p.farmer_id === $('#tf').value); $('#tp').innerHTML = ps.map(p => `<option value="${p.plot_id}">${p.plot_id} · ${(+p.area_declared_ha).toFixed(2)} ha · ${p.risk_status}/${p.legal_status}</option>`).join(''); info(); }
+  function info() { const p = byId(S.plots, 'plot_id', $('#tp').value); if (!p) return; const cap = p.area_declared_ha * S.params.max_yield_t_ha * 1000, s = sold(p.plot_id);
+    const ok = eligible(p); $('#ts').options[0].disabled = !ok; if (!ok) $('#ts').value = 'Khác';
+    $('#tinfo').innerHTML = `${ok ? '' : '<div class="msg warn">Lô chưa đủ điều kiện dòng EU (BR-030) — chỉ ghi dòng Khác.</div>'}<div class="mute">Đã bán niên vụ: ${fmt(s)} / tối đa ${fmt(cap)} kg (BR-031)</div>`; }
+  $('#tf').onchange = plotsOf; $('#tp').onchange = info; plotsOf();
+  $('#tsave').onclick = () => { const p = byId(S.plots, 'plot_id', $('#tp').value), kg = +$('#tk').value, e = [];
+    if (!(kg >= 1 && kg <= 50000)) e.push('Khối lượng không hợp lệ (1–50.000 kg)'); if ($('#ts').value === 'EU' && !eligible(p)) e.push('Lô chưa đủ điều kiện dòng EU (BR-030)');
+    if (e.length) { $('#terr').innerHTML = e.map(x => `<div class="msg err">${x}</div>`).join(''); return; }
+    const over = sold(p.plot_id) + kg > p.area_declared_ha * S.params.max_yield_t_ha * 1000; const id = 'GD-' + String(S.txns.length + 1).padStart(6, '0');
+    S.txns.push({txn_id: id, txn_date: $('#td').value, plot_id: p.plot_id, farmer_id: p.farmer_id, agent_id: farmerOf(p).agent_id, net_kg: kg, stream: $('#ts').value, season: '2026/27', receipt: null, pending: over});
+    log('Giao dịch', id, 'Tạo', '', `${kg} kg ${$('#ts').value}${over ? ' · chờ xác nhận vượt sản lượng' : ''}`);
+    modal(`${over ? '<div class="msg warn">Vượt sản lượng tối đa của lô — giao dịch chờ Tuân thủ xác nhận (BR-031).</div>' : '<div class="msg ok">Đã lưu giao dịch ' + id + '.</div>'}<button onclick="closeModal();go('SCR04')">Đóng</button>`); };
+  const rinfo = () => { const t = S.txns.filter(x => x.agent_id === $('#ra').value && x.stream === 'EU' && !x.receipt && !x.pending); $('#rinfo').textContent = `${t.length} giao dịch dòng EU chưa nhập kho · ${fmt(t.reduce((s, x) => s + x.net_kg, 0))} kg`; return t; };
+  $('#ra').onchange = rinfo; rinfo();
+  $('#rsave').onclick = () => { const t = rinfo(); if (!t.length) return modal('<div class="msg err">Không có giao dịch dòng EU chờ nhập kho.</div><button onclick="closeModal()">Đóng</button>');
+    const id = 'PN-' + String(S.receipts.length + 1).padStart(4, '0'), kg = t.reduce((s, x) => s + x.net_kg, 0); t.forEach(x => x.receipt = id);
+    S.receipts.push({id, agent: $('#ra').value, date: '2026-12-08', stream: 'EU', total: kg, remaining: kg, txns: t.map(x => x.txn_id)}); log('Phiếu nhập', id, 'Tạo', '', fmt(kg) + ' kg'); go('SCR04'); };
+};
+
+function shipmentPlots(sh) { const ids = new Set(); sh.alloc.forEach(a => byId(S.receipts, 'id', a.receipt).txns.forEach(tid => ids.add(byId(S.txns, 'txn_id', tid).plot_id))); return [...ids].map(id => byId(S.plots, 'plot_id', id)); }
+R.SCR05 = function (sid) {
+  const avail = S.receipts.filter(r => r.stream === 'EU').reduce((s, r) => s + r.remaining, 0);
+  const sh = sid ? byId(S.shipments, 'id', sid) : S.shipments[0];
+  const alerts = S.shipments.filter(x => !x.ref && ['Sẵn sàng', 'Đã gửi', 'Nháp'].includes(x.status) && (new Date(x.eta) - S.today) / 864e5 < S.params.dds_ref_alert_days);
+  $('#main').innerHTML = head('Lô hàng & gói dữ liệu DDS', 'SCR-05 · FR-015, FR-017…020 · BR-032, BR-033, BR-040…043, BR-050') + `
+  ${alerts.map(x => `<div class="msg warn">${x.id}: tàu đến ${d2(x.eta)} (còn &lt; ${S.params.dds_ref_alert_days} ngày) nhưng chưa có số tham chiếu DDS (BR-043).</div>`).join('')}
+  <div class="grid3" style="margin-bottom:14px"><div class="card kpi"><div class="v">${fmt(Math.round(avail / 1000))} t</div><div class="l">Đủ điều kiện EU, còn khả dụng (US-020)</div></div>
+  <div class="card kpi"><div class="v">${S.shipments.length}</div><div class="l">Lô hàng</div></div><div class="card kpi"><div class="v">${S.shipments.filter(x => x.ref).length}</div><div class="l">Có số tham chiếu DDS</div></div>
+  <div class="card kpi"><div class="v">${S.params.eudr_apply_date.split('-').reverse().join('/')}</div><div class="l">Ngày áp dụng EUDR (tham số)</div></div></div>
+  <div class="grid2"><div class="card"><div class="row"><h1 class="grow" style="font-size:15px">Lô hàng</h1>${S.role === 'Thu mua' ? '<button class="p" id="newS">+ Lô hàng</button>' : ''}</div>
+    <table><tr><th>Mã</th><th>Hợp đồng</th><th>Tàu đến</th><th>kg</th><th>Trạng thái</th></tr>${S.shipments.map(x => `<tr class="click" data-id="${x.id}"><td class="mono">${x.id}</td><td>${x.contract}</td><td>${d2(x.eta)}</td><td>${fmt(x.alloc.reduce((s, a) => s + a.kg, 0))}</td><td>${badge(x.status)}</td></tr>`).join('')}</table></div>
+  <div class="card" id="sd"></div></div>`;
+  document.querySelectorAll('tr.click').forEach(tr => tr.onclick = () => go('SCR05', tr.dataset.id));
+  if ($('#newS')) $('#newS').onclick = () => { const n = S.shipments.length + 14; const id = 'SH-2026-' + String(n + 1).padStart(3, '0');
+    S.shipments.push({id, contract: 'DC-EU-0' + (142 + n), importer: 'Nhà nhập khẩu EU (giả định)', hs: '0901', eta: '2027-01-20', status: 'Nháp', alloc: [], ref: '', reason: '', history: [['Nháp', d2(S.today)]]}); log('Lô hàng', id, 'Tạo'); go('SCR05', id); };
+  if (!sh) return;
+  const plots = shipmentPlots(sh), kg = sh.alloc.reduce((s, a) => s + a.kg, 0);
+  const bad = plots.filter(p => !eligible(p));
+  const checks = [[sh.alloc.length > 0, 'Đã phân bổ phiếu nhập dòng EU (BR-033)'], [bad.length === 0 && plots.length > 0, `Mọi lô Đạt + pháp lý Đủ (BR-040)${bad.length ? ': lỗi ở ' + bad.map(p => p.plot_id).join(', ') : ''}`], [plots.every(p => p.area_declared_ha <= 4 || p.geometry.type === 'Polygon'), 'Lô > 4 ha có đa giác (BR-002)'], [!!sh.hs && !!sh.eta, 'Có mã HS và ngày tàu']];
+  const ready = checks.every(c => c[0]);
+  $('#sd').innerHTML = `<div class="row"><h1 class="grow" style="font-size:16px">${sh.id}</h1>${badge(sh.status)}</div>
+    <div class="mute">${sh.contract} · ${sh.importer} · HS ${sh.hs} · tàu đến ${d2(sh.eta)}</div>
+    <h1 style="font-size:14px;margin-top:12px">Phân bổ (BR-032)</h1>
+    <table><tr><th>Phiếu</th><th>Còn lại</th><th>Phân bổ (kg)</th></tr>${S.receipts.filter(r => r.stream === 'EU' && (r.remaining > 0 || sh.alloc.some(a => a.receipt === r.id))).slice(0, 8).map(r => { const a = sh.alloc.find(x => x.receipt === r.id);
+      return `<tr><td class="mono">${r.id}</td><td>${fmt(r.remaining)}</td><td>${sh.status === 'Nháp' && S.role === 'Thu mua' ? `<input type="number" style="width:110px" data-r="${r.id}" value="${a ? a.kg : ''}" placeholder="0">` : fmt(a ? a.kg : 0)}</td></tr>`; }).join('')}</table>
+    ${sh.status === 'Nháp' && S.role === 'Thu mua' ? '<div id="aerr"></div><button id="aSave" style="margin-top:8px">Lưu phân bổ</button>' : ''}
+    <p class="mute">Tổng: <b>${fmt(kg)} kg</b> từ <b>${plots.length}</b> lô.</p>
+    <h1 style="font-size:14px">Kiểm tra trước khi lập gói</h1><ul class="check">${checks.map(c => `<li>${c[0] ? '✅' : '⛔'} ${c[1]}</li>`).join('')}</ul>
+    <div class="row">${S.role === 'Tuân thủ' && ['Nháp', 'Sẵn sàng'].includes(sh.status) ? `<button class="p" id="mk" ${ready ? '' : 'disabled'}>Lập & tải gói DDS</button>` : ''}
+    ${S.role === 'Tuân thủ' && sh.status === 'Đã gửi' ? '<input id="ref" placeholder="Số tham chiếu DDS"><button class="p" id="okR">Ghi chấp nhận</button><button id="rej">Ghi từ chối</button>' : ''}</div>
+    ${sh.ref ? `<div class="msg ok">Số tham chiếu DDS: <span class="mono">${sh.ref}</span></div>` : ''}${sh.reason ? `<div class="msg err">Từ chối lần trước: ${sh.reason}</div>` : ''}
+    ${sh.pkg ? `<p class="mute">Gói ${sh.pkg} · lưu đến ${sh.retain} (BR-050)</p>` : ''}
+    <h1 style="font-size:14px">Lịch sử</h1><div class="mute">${sh.history.map(h => h.join(' · ')).join('<br>')}</div>`;
+  if ($('#aSave')) $('#aSave').onclick = () => { const e = [], na = [];
+    document.querySelectorAll('[data-r]').forEach(i => { const v = +i.value || 0, r = byId(S.receipts, 'id', i.dataset.r), prev = (sh.alloc.find(x => x.receipt === r.id) || {kg: 0}).kg;
+      if (v > r.remaining + prev) e.push(`${r.id}: vượt khối lượng còn lại ${fmt(r.remaining + prev)} kg (BR-032)`); if (v > 0) na.push({receipt: r.id, kg: v}); });
+    if (e.length) { $('#aerr').innerHTML = e.map(x => `<div class="msg err">${x}</div>`).join(''); return; }
+    sh.alloc.forEach(a => byId(S.receipts, 'id', a.receipt).remaining += a.kg); na.forEach(a => byId(S.receipts, 'id', a.receipt).remaining -= a.kg); sh.alloc = na;
+    log('Lô hàng', sh.id, 'Phân bổ', '', fmt(na.reduce((s, a) => s + a.kg, 0)) + ' kg'); go('SCR05', sh.id); };
+  if ($('#mk')) $('#mk').onclick = () => {
+    const gj = {type: 'FeatureCollection', properties: {shipment: sh.id, hs_code: sh.hs, description: 'Green Robusta coffee beans, not roasted', net_mass_kg: kg, country_of_production: 'VN', exporter: 'DakCoffee Export (fictitious)', importer: sh.importer, production_period: '2026-11-01/2027-03-31', generated_at: new Date().toISOString(), eudr_note: S.today < new Date(S.params.eudr_apply_date) ? 'Prepared before EUDR application date' : '', data: 'SYNTHETIC'},
+      features: plots.map(p => ({type: 'Feature', geometry: p.geometry, properties: {plot_id: p.plot_id, area_ha: p.area_declared_ha, risk_result: p.risk_status, rule: p.risk_rule, map_version: p.map_version, legal_doc: p.doc_type}}))};
+    const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(gj, null, 1)], {type: 'application/geo+json'})); a.download = sh.id + '_DDS_package.geojson'; a.click();
+    sh.pkg = 'PKG-' + sh.id.slice(-3); sh.retain = d2(new Date(S.today.getTime() + 5 * 365.25 * 864e5)); sh.status = 'Đã gửi'; sh.history.push(['Đã gửi', d2(S.today)]); log('Gói DDS', sh.pkg, 'Lập + gửi', '', plots.length + ' lô'); go('SCR05', sh.id); };
+  if ($('#okR')) $('#okR').onclick = () => { if (!$('#ref').value.trim()) return; sh.ref = $('#ref').value.trim(); sh.status = 'Được chấp nhận'; sh.history.push(['Được chấp nhận', d2(S.today)]); log('Lô hàng', sh.id, 'Số tham chiếu', '', sh.ref); go('SCR05', sh.id); };
+  if ($('#rej')) $('#rej').onclick = () => { const r = prompt('Lý do từ chối do nhà nhập khẩu báo:'); if (!r) return; sh.reason = r; sh.status = 'Nháp'; sh.history.push(['Bị từ chối → Nháp', d2(S.today)]); log('Lô hàng', sh.id, 'Từ chối', 'Đã gửi', 'Nháp'); go('SCR05', sh.id); };
+};
+
+R.SCR06 = function () {
+  const P = S.plots, n = P.length, valid = P.filter(p => p.geometry && (p.area_declared_ha <= 4 || p.geometry.type === 'Polygon')).length;
+  const gray = P.filter(p => p.risk_status === 'Vùng xám'), over = gray.filter(p => (S.today - new Date(p.gray_since)) / 864e5 > S.params.grayzone_sla_days).length;
+  const ds = [...new Set(P.map(p => p.district_old))].sort();
+  const cnt = (d, s) => P.filter(p => p.district_old === d && p.risk_status === s).length;
+  $('#main').innerHTML = head('Dashboard', 'SCR-06 · FR-021 · KPI S18') + `
+  <div class="grid3"><div class="card kpi"><div class="v">${Math.round(valid / n * 100)}%</div><div class="l">Lô có tọa độ hợp lệ (mục tiêu ≥ 90%)</div></div>
+  <div class="card kpi"><div class="v">${gray.length} <span style="font-size:14px;color:var(--bad)">(${over} quá hạn)</span></div><div class="l">Vùng xám tồn</div></div>
+  <div class="card kpi"><div class="v">${fmt(Math.round(S.receipts.reduce((s, r) => s + r.remaining, 0) / 1000))} t</div><div class="l">Đủ điều kiện EU trong kho</div></div>
+  <div class="card kpi"><div class="v">${S.shipments.filter(x => !x.ref).length}</div><div class="l">Lô hàng chưa có số tham chiếu</div></div></div>
+  <div class="card" style="margin-top:14px"><h1 style="font-size:15px">Kết quả chấm theo huyện (cũ)</h1>
+  ${ds.map(d => { const t = P.filter(p => p.district_old === d).length; return `<div class="row" style="margin:6px 0"><span style="width:110px">${d}</span><span class="grow" style="display:flex;height:16px;border-radius:4px;overflow:hidden;background:#eee">
+    <span style="width:${cnt(d, 'Đạt') / t * 100}%;background:var(--ok)"></span><span style="width:${cnt(d, 'Vùng xám') / t * 100}%;background:#d99a2b"></span><span style="width:${cnt(d, 'Loại') / t * 100}%;background:var(--bad)"></span></span><span style="width:150px" class="mute">${cnt(d, 'Đạt')} / ${cnt(d, 'Vùng xám')} / ${cnt(d, 'Loại')} (Đạt/Xám/Loại)</span></div>`; }).join('')}
+  <p class="mute">Rủi ro theo huyện từ dữ liệu vệ tinh công khai: <a href="../">dashboard S9</a>.</p></div>`;
+};
+
+R.SCR07 = function () {
+  const P = S.params, can = S.role === 'Quản lý';
+  const labels = {eudr_apply_date: 'Ngày áp dụng EUDR', buffer_m: 'Vùng đệm (m) — ASM-13', forest_overlap_min: 'Ngưỡng giao rừng 2020 (%)', area_tolerance: 'Dung sai diện tích (%) — ASM-23', max_yield_t_ha: 'Năng suất tối đa (t/ha) — ASM-24', dds_ref_alert_days: 'Cảnh báo số tham chiếu (ngày)', grayzone_sla_days: 'SLA Vùng xám (ngày)', map_version: 'Phiên bản bản đồ'};
+  $('#main').innerHTML = head('Quản trị', 'SCR-07 · FR-016, FR-022…024 · BR-051, BR-060') + `
+  <div class="grid2"><div class="card"><h1 style="font-size:15px">Tham số ${can ? '' : '<span class="mute">(chỉ Quản lý được sửa)</span>'}</h1>
+    ${Object.keys(labels).map(k => `<label class="f"><span>${labels[k]}</span><input data-k="${k}" value="${P[k]}" ${can ? '' : 'disabled'}></label>`).join('')}
+    ${can ? '<button class="p" id="pSave">Lưu tham số</button>' : ''}</div>
+  <div class="card"><h1 style="font-size:15px">Đại lý (FR-016)</h1><div class="tw" style="max-height:200px"><table><tr><th>Mã</th><th>Tên</th><th>Email</th></tr>${AG.map(a => `<tr><td>${a.id}</td><td>${a.name}</td><td>${a.email}</td></tr>`).join('')}</table></div>
+  <h1 style="font-size:15px;margin-top:14px">Người dùng (FR-023)</h1><table><tr><th>Tài khoản</th><th>Vai trò</th></tr><tr><td>ha.nguyen</td><td>Tuân thủ</td></tr><tr><td>hai.tran</td><td>Thu mua</td></tr><tr><td>bhim.nie</td><td>Đại lý (DL-01)</td></tr><tr><td>manager</td><td>Quản lý</td></tr></table></div></div>
+  <div class="card"><h1 style="font-size:15px">Nhật ký audit (BR-051)</h1><div class="tw" style="max-height:300px"><table><tr><th>Thời điểm</th><th>Người</th><th>Đối tượng</th><th>Mã</th><th>Hành động</th><th>Trước</th><th>Sau</th></tr>${S.audit.map(a => `<tr><td>${a.at}</td><td>${a.user}</td><td>${a.entity}</td><td class="mono">${a.id}</td><td>${a.action}</td><td>${a.before}</td><td>${a.after}</td></tr>`).join('') || '<tr><td colspan="7" class="mute">Chưa có thao tác trong phiên này. Thử đăng ký lô, quyết định Vùng xám hoặc lập gói DDS.</td></tr>'}</table></div></div>`;
+  if ($('#pSave')) $('#pSave').onclick = () => { document.querySelectorAll('[data-k]').forEach(i => { const k = i.dataset.k, v = isNaN(+i.value) || k === 'eudr_apply_date' || k === 'map_version' ? i.value : +i.value; if (String(P[k]) !== String(v)) { log('Tham số', k, 'Sửa', P[k], v); P[k] = v; } }); go('SCR07'); };
+};
+
+nav(); go(location.hash.slice(1) && R[location.hash.slice(1)] ? location.hash.slice(1) : 'SCR01');
+</script>
+</body>
+</html>

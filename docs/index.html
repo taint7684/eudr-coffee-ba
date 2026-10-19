@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EUDR-Ready Coffee — Rủi ro mất cây che phủ Đắk Lắk</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+:root{--bg:#f6f7f5;--card:#fff;--ink:#1d2321;--mute:#5f6b66;--line:#e3e7e4;--acc:#2f6f4f;--hi:#b83b2e;--mid:#d99a2b;--lo:#6f9f7a;--na:#c9cfcb}
+@media (prefers-color-scheme:dark){:root{--bg:#121614;--card:#1b201e;--ink:#e8ece9;--mute:#9aa6a0;--line:#2c3330;--acc:#6fbf94;--na:#3a423e}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+header{padding:28px 16px 8px;max-width:1180px;margin:auto}
+h1{font-size:24px;margin:0 0 4px;font-weight:650}h2{font-size:16px;margin:0 0 12px;font-weight:600}
+.sub{color:var(--mute);margin:0}.wrap{max-width:1180px;margin:auto;padding:8px 16px 40px}
+nav a{color:var(--acc);text-decoration:none;margin-right:16px;font-weight:550}
+.grid{display:grid;gap:16px}.k4{grid-template-columns:repeat(4,1fr)}.c2{grid-template-columns:3fr 2fr}.c2b{grid-template-columns:1fr 1fr}
+@media (max-width:860px){.k4{grid-template-columns:1fr 1fr}.c2,.c2b{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px}
+.kpi .v{font-size:26px;font-weight:650;letter-spacing:-.01em}.kpi .l{color:var(--mute);font-size:13px}
+#map{height:430px;border-radius:8px}
+.legend span{display:inline-flex;align-items:center;margin-right:14px;font-size:13px;color:var(--mute)}
+.legend i{width:12px;height:12px;border-radius:3px;margin-right:6px;display:inline-block}
+table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:right}
+th:first-child,td:first-child{text-align:left}th{color:var(--mute);font-weight:550;font-size:12.5px}
+.pill{padding:2px 8px;border-radius:99px;font-size:12px;color:#fff}
+.tools{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}select{padding:5px 8px;border-radius:6px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
+svg text{fill:var(--mute);font-size:11px}.note{color:var(--mute);font-size:13px}
+footer{color:var(--mute);font-size:12.5px;max-width:1180px;margin:auto;padding:0 16px 40px}
+.tbl{overflow-x:auto}
+</style>
+</head>
+<body>
+<header>
+  <nav><a href="./">Dashboard rủi ro</a><a href="prototype/">Prototype ECTS</a><a href="https://github.com/taint7684/eudr-coffee-ba">GitHub</a></nav>
+  <h1 style="margin-top:14px">Rủi ro mất cây che phủ theo huyện — Đắk Lắk (ranh giới trước 07/2025)</h1>
+  <p class="sub">Chỉ số sàng lọc phục vụ ưu tiên thu tọa độ và xác minh lô cà phê theo EUDR. Không phải kết luận phá rừng.</p>
+</header>
+<div class="wrap">
+  <section class="grid k4" id="kpis"></section>
+
+  <section class="grid c2" style="margin-top:16px">
+    <div class="card"><h2>Mức rủi ro theo huyện (2021–2025)</h2><div id="map"></div>
+      <div class="legend" style="margin-top:8px"><span><i style="background:var(--hi)"></i>Cao</span><span><i style="background:var(--mid)"></i>Trung bình</span><span><i style="background:var(--lo)"></i>Thấp</span></div></div>
+    <div class="card"><h2>Giá trị xuất khẩu sang EU bị đe dọa (USD/năm)</h2><div id="var"></div>
+      <p class="note">Lăng kính 1: thiếu tọa độ thì không lập được DDS, nên toàn bộ phần EU bị chặn. Lăng kính 2: phần nằm ở huyện rủi ro Cao (ASM-22 tạm, chờ niên giám).</p></div>
+  </section>
+
+  <section class="grid c2b" style="margin-top:16px">
+    <div class="card"><h2>Pareto — 80% diện tích mất tập trung ở bao nhiêu huyện?</h2><div id="pareto"></div></div>
+    <div class="card"><h2>Xu hướng toàn tỉnh (ha/năm, tán ≥ 30%)</h2><div id="trend"></div>
+      <h2 style="margin-top:18px">Nguyên nhân 2021–2025</h2><div id="drivers"></div></div>
+  </section>
+
+  <section class="card" style="margin-top:16px">
+    <h2>Bảng xếp hạng</h2>
+    <div class="tools">
+      <label>Mức rủi ro <select id="fLevel"><option value="">Tất cả</option><option>Cao</option><option>Trung bình</option><option>Thấp</option></select></label>
+      <label>Ngưỡng tán cho cột "Mất 2021+" <select id="fTh"><option value="30">30% (mặc định GFW)</option><option value="10">10% (sát định nghĩa EUDR)</option><option value="50">50%</option></select></label>
+    </div>
+    <div class="tbl"><table id="tbl"></table></div>
+    <p class="note">Diện tích cà phê theo huyện: chờ niên giám thống kê. Khi đủ, chỉ số chuyển sang v1 = mất do nông nghiệp × diện tích cà phê.</p>
+  </section>
+</div>
+<footer>
+  Nguồn: Global Forest Watch country statistics 2025 (Hansen et al. 2013; Sims et al. 2025 — drivers), UN Comtrade (HS 0901), ranh giới geoBoundaries VNM ADM2 (CC BY 3.0 IGO). Phương pháp và giả định: <a href="https://github.com/taint7684/eudr-coffee-ba/blob/main/03-data/S9-risk-analysis.md">S9</a> · <a href="https://github.com/taint7684/eudr-coffee-ba/blob/main/03-data/S10-critique.md">S10</a>.<br>
+  Independent research. Not legal advice. Not affiliated with any company.
+</footer>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="data/dashboard.js"></script>
+<script>
+const D = window.DASH, S = D.summary;
+const fmt = n => Number(n).toLocaleString('vi-VN');
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const color = l => l === 'Cao' ? css('--hi') : l === 'Trung bình' ? css('--mid') : css('--lo');
+const usd = n => (n / 1e6).toLocaleString('vi-VN', {maximumFractionDigits: 0}) + ' triệu';
+
+// KPI
+const kp = [
+  [fmt(S.loss_2021_plus_total_ha) + ' ha', 'Mất cây che phủ 2021–2025'],
+  [Math.round(S.agri_loss_2021_plus_total_ha / S.loss_2021_plus_total_ha * 100) + '%', 'Do nông nghiệp'],
+  [S.pareto.districts_for_80pct + '/' + S.pareto.of + ' huyện', 'Chiếm 80% diện tích mất'],
+  [usd(S.value_at_risk_usd.data_gap_lens.likely), 'USD/năm XK sang EU cần tọa độ (Đắk Lắk)']];
+document.getElementById('kpis').innerHTML = kp.map(k => `<div class="card kpi"><div class="v">${k[0]}</div><div class="l">${k[1]}</div></div>`).join('');
+
+// Map
+const byName = Object.fromEntries(D.districts.map(d => [d.district, d]));
+const map = L.map('map', {scrollWheelZoom: false, attributionControl: true});
+L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {attribution: 'Esri, HERE, Garmin, © OpenStreetMap'}).addTo(map);
+const layer = L.geoJSON(D.geo, {
+  style: f => ({color: '#fff', weight: 1.2, fillOpacity: .78, fillColor: color(byName[f.properties.district].risk_level)}),
+  onEachFeature: (f, l) => { const d = byName[f.properties.district];
+    l.bindTooltip(`<b>${d.district}</b><br>Mất 2021+: ${fmt(d.loss_2021_plus_ha)} ha<br>Do nông nghiệp: ${Math.round(d.agri_share * 100)}%<br>Điểm v0: ${d.risk_score} · ${d.risk_level}`, {sticky: true}); }
+}).addTo(map);
+map.fitBounds(layer.getBounds());
+
+// Value at risk
+const V = S.value_at_risk_usd;
+const row = (name, o) => `<tr><td>${name}</td><td>${usd(o.min)}</td><td><b>${usd(o.likely)}</b></td><td>${usd(o.max)}</td></tr>`;
+document.getElementById('var').innerHTML = `<table><tr><th></th><th>Min</th><th>Likely</th><th>Max</th></tr>${row('Kim ngạch VN → EU-27', D.summary.eu27_export_usd)}${row('Lăng kính 1 — thiếu tọa độ', V.data_gap_lens)}${row('Lăng kính 2 — huyện rủi ro Cao', V.deforestation_screening_lens)}</table>`;
+
+// SVG helpers
+function svg(w, h, inner) { return `<svg viewBox="0 0 ${w} ${h}" width="100%" role="img">${inner}</svg>`; }
+// Pareto
+(function () {
+  const rows = D.districts, w = 520, h = 240, pl = 40, pb = 70, max = Math.max(...rows.map(r => +r.loss_2021_plus_ha));
+  const bw = (w - pl - 10) / rows.length; let g = '';
+  rows.forEach((r, i) => { const bh = (h - pb - 10) * r.loss_2021_plus_ha / max, x = pl + i * bw;
+    g += `<rect x="${x + 2}" y="${h - pb - bh}" width="${bw - 4}" height="${bh}" rx="2" fill="${color(r.risk_level)}"><title>${r.district}: ${fmt(r.loss_2021_plus_ha)} ha</title></rect>`;
+    g += `<text transform="translate(${x + bw / 2},${h - pb + 8}) rotate(55)">${r.district}</text>`; });
+  const pts = rows.map((r, i) => `${pl + i * bw + bw / 2},${10 + (h - pb - 10) * (1 - r.cum_share)}`).join(' ');
+  g += `<polyline points="${pts}" fill="none" stroke="${css('--ink')}" stroke-width="1.5"/>`;
+  const y80 = 10 + (h - pb - 10) * .2;
+  g += `<line x1="${pl}" x2="${w - 10}" y1="${y80}" y2="${y80}" stroke="${css('--mute')}" stroke-dasharray="4 4"/><text x="${w - 12}" y="${y80 - 4}" text-anchor="end">80%</text>`;
+  document.getElementById('pareto').innerHTML = svg(w, h, g) + `<p class="note">${S.pareto.top.join(', ')} chiếm 80% diện tích mất cây che phủ 2021–2025.</p>`;
+})();
+// Trend
+(function () {
+  const rows = D.yearly, w = 460, h = 150, max = Math.max(...rows.map(r => r.loss_ha)), bw = (w - 20) / rows.length; let g = '';
+  rows.forEach((r, i) => { const bh = (h - 30) * r.loss_ha / max, x = 10 + i * bw;
+    g += `<rect x="${x + 3}" y="${h - 18 - bh}" width="${bw - 6}" height="${bh}" rx="2" fill="${r.year >= 2021 ? css('--acc') : css('--na')}"><title>${r.year}: ${fmt(r.loss_ha)} ha</title></rect><text x="${x + bw / 2}" y="${h - 4}" text-anchor="middle">${r.year}</text>`; });
+  document.getElementById('trend').innerHTML = svg(w, h, g) + `<p class="note">Sau mốc 31/12/2020 (xanh), diện tích mất giảm khoảng một nửa so với 2016–2020.</p>`;
+})();
+// Drivers
+(function () {
+  const e = Object.entries(D.drivers), tot = e.reduce((a, b) => a + b[1], 0), VN = {'Permanent agriculture': 'Nông nghiệp lâu năm', 'Logging': 'Khai thác gỗ', 'Shifting cultivation': 'Canh tác nương rẫy', 'Other natural disturbances': 'Thiên tai khác', 'Hard commodities': 'Khoáng sản', 'Settlements & Infrastructure': 'Đô thị, hạ tầng', 'Wildfire': 'Cháy rừng'};
+  document.getElementById('drivers').innerHTML = e.map(([k, v]) => `<div style="display:flex;align-items:center;gap:8px;margin:4px 0;font-size:13px"><span style="width:150px;color:var(--mute)">${VN[k] || k}</span><span style="flex:1;background:var(--line);border-radius:4px;height:10px"><span style="display:block;height:10px;border-radius:4px;background:var(--acc);width:${v / tot * 100}%"></span></span><span style="width:52px;text-align:right">${(v / tot * 100).toFixed(1)}%</span></div>`).join('');
+})();
+// Table
+function table() {
+  const lv = document.getElementById('fLevel').value, th = document.getElementById('fTh').value;
+  const rows = D.districts.filter(d => !lv || d.risk_level === lv);
+  const loss = d => th === '30' ? d.loss_2021_plus_ha : (D.threshold[d.district] || {})['loss21_t' + th + '_ha'];
+  document.getElementById('tbl').innerHTML = `<tr><th>Huyện</th><th>Mất 2021+ (ha)</th><th>Do nông nghiệp (ha)</th><th>% nông nghiệp</th><th>So 2016–20</th><th>Điểm v0</th><th>Mức</th></tr>` +
+    rows.map(d => `<tr><td>${d.district}</td><td>${fmt(loss(d))}</td><td>${fmt(d.agri_loss_2021_plus_ha)}</td><td>${Math.round(d.agri_share * 100)}%</td><td>${Math.round(d.loss_trend_pct * 100)}%</td><td>${(+d.risk_score).toFixed(3)}</td><td><span class="pill" style="background:${color(d.risk_level)}">${d.risk_level}</span></td></tr>`).join('');
+}
+document.getElementById('fLevel').onchange = table; document.getElementById('fTh').onchange = table; table();
+</script>
+</body>
+</html>

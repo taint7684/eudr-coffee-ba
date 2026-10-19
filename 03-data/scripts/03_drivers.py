@@ -32,7 +32,7 @@ def main():
             "source": "SRC-008 tab 'Subnational 2 drivers' (Sims 2025, SRC-010)"}
            for (d, k), v in sorted(agg.items())]
     with open(OUT, "w", newline="\n", encoding="utf-8") as f:
-        w = csv.DictWriter(f, fieldnames=list(out[0]))
+        w = csv.DictWriter(f, lineterminator="\n", fieldnames=list(out[0]))
         w.writeheader()
         w.writerows(out)
     prov = defaultdict(float)

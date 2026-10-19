@@ -96,7 +96,7 @@ def main():
     n80 = next(i for i, r in enumerate(rows, 1) if r["cum_share"] >= 0.8)
 
     with open(P / "district_master.csv", "w", newline="\n", encoding="utf-8") as f:
-        w = csv.DictWriter(f, fieldnames=list(rows[0]))
+        w = csv.DictWriter(f, lineterminator="\n", fieldnames=list(rows[0]))
         w.writeheader()
         w.writerows(rows)
 
