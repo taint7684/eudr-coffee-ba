@@ -23,3 +23,11 @@ ASM-21,Tỷ trọng Đắk Lắk (ranh giới cũ) trong sản lượng/xuất k
 ASM-22,Tỷ trọng diện tích cà phê Đắk Lắk nằm ở 5 huyện rủi ro Cao (tạm),Giá trị bị đe dọa — lăng kính sàng lọc phá rừng,"Tạm: Cư M'gar ~37.600 ha (SRC-017) ≈ 18% riêng một huyện; chờ niên giám để tính đúng (RSK-03)",L,0.20,0.35,0.50,Lăng kính sàng lọc phá rừng lệch; tính lại khi có niên giám
 ASM-23,Dung sai lệch diện tích khai báo/GCN so với diện tích đo,BR-004; BR-021,Suy luận: sai số GPS điện thoại + đo đạc thủ công; chưa có chuẩn,L,0.10,0.20,0.30,Tỷ lệ lô bị cảnh báo/Mâu thuẫn thay đổi
 ASM-24,Năng suất tối đa hợp lý một lô (t nhân/ha) để phát hiện hàng lẫn,BR-031,"Năng suất bình quân 2,6 t/ha (ASM-03) + biên cho vườn thâm canh; cần số năng suất cao nhất theo huyện",M,3.0,3.5,4.5,Ngưỡng thấp gây cảnh báo giả; ngưỡng cao bỏ lọt hàng lẫn
+ASM-25,Mức giảm giá DN phải chấp nhận khi không đáp ứng EUDR và bán lô hàng sang thị trường khác (% giá),Lợi ích business case (T16.3),"Suy luận: chênh lệch giá giữa thị trường; chưa có nguồn định lượng. Giá đơn vị EU 2023 = 2.870 USD/t (SRC-013)",L,0.03,0.06,0.10,Tham số nhạy nhất; quyết định có đầu tư hay không
+ASM-26,Tỷ giá VND/USD,Quy đổi chi phí,Suy luận theo mức 2025–2026; cần cập nhật,M,25000,25400,26500,Ảnh hưởng nhỏ
+ASM-27,Chi phí nhân sự tuân thủ (USD/năm),Chi phí vận hành,Suy luận theo mặt bằng lương chuyên viên tại Đắk Lắk; chưa có nguồn,L,8000,12000,18000,Ảnh hưởng nhỏ
+ASM-28,Chi phí đào tạo một đại lý (USD),Chi phí triển khai,Suy luận,L,50,100,200,Ảnh hưởng nhỏ
+ASM-29,Tỷ lệ lợi ích năm 1 theo tốc độ triển khai (A 50% · B 90% · C 70%),Mô hình dòng tiền,Suy luận: A 9 tháng; B 3 tháng; C 6 tháng tới khi vận hành,L,,,,Thứ hạng A/B/C khi so NPV
+ASM-30,Suất chiết khấu,NPV,Chi phí vốn DN vừa VN [Inference],M,0.08,0.10,0.14,Ảnh hưởng nhỏ
+ASM-31,Chi phí tách dòng hàng EU (kho/bao riêng/xử lý) USD/t,Chi phí vận hành,Suy luận; cần báo cáo chi phí chuỗi tách dòng,L,5,15,30,Tham số nhạy; quyết định điểm hòa vốn
+ASM-32,Hỗ trợ/thưởng cho nông hộ cung cấp dữ liệu (USD/t EU),Chi phí vận hành; tác động nông hộ,Suy luận; tương đương mức thưởng chứng nhận thấp [Unverified],L,0,10,30,Tham số nhạy

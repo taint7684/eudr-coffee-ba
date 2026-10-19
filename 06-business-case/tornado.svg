@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 238" font-family="system-ui,Segoe UI,sans-serif" font-size="12">
+<line x1="400.0" x2="400.0" y1="10" y2="228" stroke="#555" stroke-dasharray="3 3"/>
+<text x="182" y="35" text-anchor="end" fill="#333">Mức giảm giá khi phải bán sang</text>
+<rect x="190.0" y="24" width="420.0" height="16" rx="2" fill="#2f6f4f"/>
+<text x="182" y="61" text-anchor="end" fill="#333">Tỷ trọng bán EU</text>
+<rect x="221.6" y="50" width="356.7" height="16" rx="2" fill="#2f6f4f"/>
+<text x="182" y="87" text-anchor="end" fill="#333">Sản lượng thu mua (t/năm)</text>
+<rect x="227.5" y="76" width="344.9" height="16" rx="2" fill="#2f6f4f"/>
+<text x="182" y="113" text-anchor="end" fill="#333">Suất chiết khấu</text>
+<rect x="370.1" y="102" width="61.7" height="16" rx="2" fill="#2f6f4f"/>
+<text x="182" y="139" text-anchor="end" fill="#333">Chi phí tách dòng/kho riêng (U</text>
+<rect x="381.0" y="128" width="38.0" height="16" rx="2" fill="#2f6f4f"/>
+<text x="182" y="165" text-anchor="end" fill="#333">Hỗ trợ nông hộ cung cấp dữ liệ</text>
+<rect x="387.3" y="154" width="25.3" height="16" rx="2" fill="#2f6f4f"/>
+<text x="182" y="191" text-anchor="end" fill="#333">Năng suất (t/ha)</text>
+<rect x="392.6" y="180" width="12.3" height="16" rx="2" fill="#2f6f4f"/>
+<text x="182" y="217" text-anchor="end" fill="#333">Diện tích bình quân/lô (ha)</text>
+<rect x="392.6" y="206" width="12.3" height="16" rx="2" fill="#2f6f4f"/>
+<text x="400.0" y="237" text-anchor="middle" fill="#555">NPV cơ sở 4.43 triệu USD</text></svg>
