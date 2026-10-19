@@ -1,0 +1,13 @@
+id,category,requirement,measure,source,moscow
+NFR-001,Khả dụng,"Ứng dụng di động của Đại lý hoạt động offline cho đăng ký nông hộ, lô và giao dịch; tự đồng bộ khi có mạng.",Lưu được ≥ 500 bản ghi offline; đồng bộ ≤ 2 phút/500 bản ghi khi có 3G,PESTLE (sóng yếu); S4 P3,Must
+NFR-002,Hiệu năng,Thời gian chấm rủi ro một lô.,≤ 10 giây/lô (p95); chấm lại 20.000 lô ≤ 4 giờ,S9; ASM-01,Should
+NFR-003,Lưu trữ,Lưu hồ sơ thẩm định và gói DDS.,≥ 5 năm; không xóa cứng; khôi phục được trong ≤ 1 ngày làm việc,Điều 9(1); 12(5),Must
+NFR-004,Sao lưu,Sao lưu dữ liệu.,Hằng ngày; RPO ≤ 24 giờ; RTO ≤ 8 giờ,Thực hành chuẩn,Must
+NFR-005,Ngôn ngữ,Giao diện tiếng Việt; gói DDS và tài liệu xuất cho nhà nhập khẩu bằng tiếng Anh.,100% nhãn có bản dịch,S3; Điều 6(2),Must
+NFR-006,Bảo mật,Xác thực và phân quyền theo vai trò; mã hóa đường truyền.,"TLS 1.2+; mật khẩu băm; khóa tài khoản sau 5 lần sai",ISO/IEC 27001 (tham chiếu),Must
+NFR-007,Dữ liệu cá nhân,"Thu thập tối thiểu, có đồng ý, giới hạn người xem dữ liệu nông hộ.",Ghi nhận đồng ý 100% nông hộ; chỉ vai trò được cấp mới xem số định danh,GDPR; Nghị định 13/2023/NĐ-CP [Unverified],Must
+NFR-008,Tọa độ,Độ chính xác tọa độ lưu trữ.,WGS84; ≥ 6 chữ số thập phân; ghi độ chính xác GPS (m) của thiết bị,Điều 2(28),Must
+NFR-009,Khả năng tương tác,Gói DDS theo định dạng máy đọc được.,GeoJSON RFC 7946 + CSV UTF-8,Điều 4(2); Phụ lục II,Must
+NFR-010,Khả năng mở rộng,Quy mô dữ liệu.,≥ 50.000 lô; ≥ 500.000 giao dịch/năm; ≥ 150 người dùng đồng thời,ASM-01; ASM-05,Should
+NFR-011,Truy vết,Mọi kết quả chấm lưu phiên bản dữ liệu bản đồ và tham số đã dùng.,100% kết quả có phiên bản,Điều 10(4),Must
+NFR-012,Khả dụng hệ thống,Thời gian hoạt động.,≥ 99% giờ làm việc mùa vụ (11–3),Thực hành chuẩn,Should

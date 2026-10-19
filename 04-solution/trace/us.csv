@@ -1,0 +1,32 @@
+id,epic,persona,story,fr,br,scr,moscow,release
+US-001,EP-01,Chủ đại lý,"Là chủ đại lý, tôi muốn đăng ký nông hộ kèm đồng ý xử lý dữ liệu, để nông hộ được tham gia dòng hàng EU.",FR-001,BR-006,SCR-01,Must,MVP
+US-002,EP-01,Chủ đại lý,"Là chủ đại lý, tôi muốn lấy điểm GPS ngay tại lô ≤ 4 ha, để có tọa độ đúng chuẩn EUDR mà không phải đo ranh.",FR-002,BR-001; BR-002,SCR-02,Must,MVP
+US-003,EP-01,Chủ đại lý,"Là chủ đại lý, tôi muốn ghi đa giác bằng cách đi quanh ranh lô, để đăng ký lô lớn hơn 4 ha.",FR-003,BR-002; BR-003,SCR-02,Must,MVP
+US-004,EP-01,Chủ đại lý,"Là chủ đại lý, tôi muốn được báo ngay khi lô trùng hoặc lệch diện tích, để sửa tại chỗ khi còn ở rẫy.",FR-004,BR-003; BR-004; BR-005,SCR-02,Must,MVP
+US-005,EP-01,Chủ đại lý,"Là chủ đại lý, tôi muốn chụp và nhập số GCN QSDĐ của lô, để chứng minh lô được canh tác hợp pháp.",FR-005,BR-020,SCR-02,Must,MVP
+US-006,EP-01,Chủ đại lý,"Là chủ đại lý, tôi muốn làm việc khi mất sóng và tự đồng bộ sau, để không phải quay lại rẫy lần hai.",FR-006,,SCR-02; SCR-04,Should,R2
+US-007,EP-01,Nhân viên tuân thủ,"Là nhân viên tuân thủ, tôi muốn nhập hàng loạt lô từ dữ liệu chứng nhận, để không thu lại tọa độ đã có.",FR-007,BR-001; BR-002; BR-003,SCR-01,Could,R3
+US-008,EP-02,Nhân viên tuân thủ,"Là nhân viên tuân thủ, tôi muốn hệ thống tự chấm mỗi lô mới, để biết ngay lô nào đủ điều kiện dòng EU.",FR-008,BR-010; BR-011; BR-012; BR-013; BR-014,SCR-03,Must,MVP
+US-009,EP-02,Nhân viên tuân thủ,"Là nhân viên tuân thủ, tôi muốn xem lý do của từng kết quả chấm trên bản đồ, để giải thích với nhà nhập khẩu và nông hộ.",FR-008,BR-010; BR-011; BR-012; BR-013; BR-014,SCR-03,Must,MVP
+US-010,EP-02,Nhân viên tuân thủ,"Là nhân viên tuân thủ, tôi muốn có hàng đợi Vùng xám với hạn xử lý, để không lô nào bị treo quá 14 ngày.",FR-010,BR-015,SCR-03,Must,MVP
+US-011,EP-02,Nhân viên tuân thủ,"Là nhân viên tuân thủ, tôi muốn ghi bằng chứng và quyết định cho lô Vùng xám, để kết luận có căn cứ kiểm chứng.",FR-010,BR-016,SCR-03,Must,MVP
+US-012,EP-02,Chủ đại lý,"Là chủ đại lý, tôi muốn nhận nhiệm vụ khảo sát lô Vùng xám và gửi ảnh gắn tọa độ, để lô được xác minh nhanh.",FR-010,BR-016,SCR-03,Must,MVP
+US-013,EP-02,Nhân viên tuân thủ,"Là nhân viên tuân thủ, tôi muốn thấy trạng thái pháp lý của lô, để không đưa lô thiếu giấy tờ vào gói DDS.",FR-011,BR-020; BR-021,SCR-03,Must,MVP
+US-014,EP-02,Nhân viên tuân thủ,"Là nhân viên tuân thủ, tôi muốn hệ thống chấm lại khi bản đồ cập nhật và giữ lịch sử, để chứng minh kết quả tại từng thời điểm.",FR-009,BR-017,SCR-03,Should,R3
+US-015,EP-02,Nhân viên tuân thủ,"Là nhân viên tuân thủ, tôi muốn được cảnh báo khi lô đã Đạt xuất hiện mất cây che phủ mới, để chặn hàng trước khi xuất.",FR-012,BR-018,SCR-03; SCR-05,Should,R3
+US-016,EP-03,Chủ đại lý,"Là chủ đại lý, tôi muốn ghi giao dịch thu mua theo lô, để hàng dòng EU luôn gắn với lô đất.",FR-013,BR-030,SCR-04,Must,R2
+US-017,EP-03,Nhân viên tuân thủ,"Là nhân viên tuân thủ, tôi muốn được cảnh báo khi một lô bán vượt sản lượng tối đa, để phát hiện hàng không rõ nguồn trộn vào.",FR-013,BR-031,SCR-04,Must,R2
+US-018,EP-03,Cán bộ thu mua,"Là cán bộ thu mua, tôi muốn lập phiếu nhập kho kế thừa danh sách lô từ đại lý, để không nhập lại dữ liệu.",FR-014,BR-032,SCR-04,Must,R2
+US-019,EP-03,Cán bộ thu mua,"Là cán bộ thu mua, tôi muốn lập lô hàng xuất EU chỉ từ phiếu nhập dòng EU, để hàng không bị trộn.",FR-015,BR-032; BR-033,SCR-05,Must,R2
+US-020,EP-03,Cán bộ thu mua,"Là cán bộ thu mua, tôi muốn biết bao nhiêu tấn đủ điều kiện EU đang có trong kho, để chốt hợp đồng an toàn.",FR-015,BR-033,SCR-05,Must,R2
+US-021,EP-03,Cán bộ thu mua,"Là cán bộ thu mua, tôi muốn quản lý thông tin đại lý (tên, địa chỉ, email), để đáp ứng yêu cầu thông tin nhà cung cấp.",FR-016,,SCR-07,Must,R2
+US-022,EP-04,Nhân viên tuân thủ,"Là nhân viên tuân thủ, tôi muốn lập gói dữ liệu DDS chỉ bằng một thao tác cho lô hàng, để gửi nhà nhập khẩu đúng hạn.",FR-017,BR-040; BR-041,SCR-05,Must,R2
+US-023,EP-04,Nhân viên tuân thủ,"Là nhân viên tuân thủ, tôi muốn bị chặn khi lô hàng có lô chưa Đạt, để không gửi dữ liệu sai cho nhà nhập khẩu.",FR-017,BR-040,SCR-05,Must,R2
+US-024,EP-04,Nhân viên tuân thủ,"Là nhân viên tuân thủ, tôi muốn xuất gói dạng GeoJSON và CSV, để nhà nhập khẩu nạp thẳng vào hệ thống của họ.",FR-018,BR-041,SCR-05,Must,R2
+US-025,EP-04,Nhân viên tuân thủ,"Là nhân viên tuân thủ, tôi muốn ghi số tham chiếu DDS do nhà nhập khẩu báo, để lô hàng thông quan EU không bị giữ.",FR-019,BR-043,SCR-05,Must,R2
+US-026,EP-04,Nhân viên tuân thủ,"Là nhân viên tuân thủ, tôi muốn lô hàng bị từ chối tự quay về Nháp kèm lý do, để sửa và gửi lại.",FR-019,BR-042,SCR-05,Must,R2
+US-027,EP-04,Nhân viên tuân thủ,"Là nhân viên tuân thủ, tôi muốn tra cứu hồ sơ của một lô hàng hoặc lô đất trong 5 năm, để trả lời yêu cầu kiểm tra.",FR-020,BR-050,SCR-05,Must,R2
+US-028,EP-05,Quản lý DN,"Là quản lý DN, tôi muốn xem dashboard rủi ro và KPI tuân thủ, để quyết định nơi ưu tiên nguồn lực.",FR-021,,SCR-06,Should,R3
+US-029,EP-05,Quản lý DN,"Là quản lý DN, tôi muốn xem nhật ký ai đã sửa gì, để kiểm soát nội bộ.",FR-022,BR-051,SCR-07,Must,MVP
+US-030,EP-05,Quản lý DN,"Là quản lý DN, tôi muốn phân quyền theo vai trò, để mỗi người chỉ thấy dữ liệu cần cho việc của mình.",FR-023,,SCR-07,Must,MVP
+US-031,EP-05,Quản lý DN,"Là quản lý DN, tôi muốn chỉnh tham số (ngày áp dụng, vùng đệm, năng suất tối đa), để hệ thống theo kịp thay đổi quy định.",FR-024,BR-060,SCR-07,Should,MVP

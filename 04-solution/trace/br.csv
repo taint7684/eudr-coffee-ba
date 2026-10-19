@@ -1,0 +1,29 @@
+id,rule_ears,source,fr,param
+BR-001,"KHI lưu tọa độ lô, HỆ THỐNG PHẢI lưu vĩ độ và kinh độ hệ WGS84 với ít nhất 6 chữ số thập phân.",REQ-EU-007 (Điều 2(28)),FR-002; FR-003; FR-004,
+BR-002,"KHI diện tích khai báo của lô lớn hơn 4 ha, HỆ THỐNG PHẢI yêu cầu đa giác ranh giới và từ chối lưu lô chỉ có một điểm.",REQ-EU-007 (Điều 2(28)),FR-002; FR-003; FR-004,polygon_threshold_ha=4
+BR-003,"KHI đa giác có ít hơn 3 đỉnh phân biệt, không khép kín hoặc tự cắt, HỆ THỐNG PHẢI từ chối lưu và chỉ ra lỗi.",REQ-EU-007,FR-003; FR-004,
+BR-004,"KHI diện tích khai báo lệch diện tích tính từ đa giác quá 20%, HỆ THỐNG PHẢI cảnh báo và yêu cầu người nhập xác nhận lý do.",REQ-EU-008; ASM-23,FR-004,area_tolerance=0.20
+BR-005,"KHI lô mới chồng lấn một lô đã đăng ký quá 10% diện tích lô mới, HỆ THỐNG PHẢI chặn lưu và hiển thị lô bị trùng.",REQ-EU-008,FR-004,overlap_max=0.10
+BR-006,"KHI đăng ký nông hộ, HỆ THỐNG PHẢI ghi nhận đồng ý xử lý dữ liệu cá nhân (người, thời điểm, phiên bản điều khoản) trước khi lưu.",NFR-007,FR-001,
+BR-010,"KHI lô không giao rừng 2020, không có mất cây che phủ sau 31/12/2020 trong lô và cách vùng mất/rìa rừng từ 50 m trở lên, HỆ THỐNG PHẢI gán kết quả Đạt.",REQ-EU-004; REQ-EU-023; S10 R1,FR-008,buffer_m=50
+BR-011,"KHI lô không giao rừng 2020 nhưng có mất cây che phủ sau 31/12/2020 trong lô, HỆ THỐNG PHẢI gán kết quả Vùng xám.",REQ-EU-006; S10 R2,FR-008,
+BR-012,"KHI lô giao rừng 2020 từ 10% diện tích trở lên và không có mất cây che phủ sau 31/12/2020, HỆ THỐNG PHẢI gán kết quả Vùng xám.",REQ-EU-005; REQ-EU-006; S10 R3,FR-008,forest_overlap_min=0.10
+BR-013,"KHI lô giao rừng 2020 từ 10% diện tích trở lên và có mất cây che phủ sau 31/12/2020 trong phần giao, HỆ THỐNG PHẢI gán kết quả Loại.",REQ-EU-004; REQ-EU-020; S10 R4,FR-008,forest_overlap_min=0.10
+BR-014,"KHI lô không thuộc BR-011 đến BR-013 nhưng cách vùng mất cây che phủ sau 2020 hoặc rìa rừng 2020 dưới 50 m, HỆ THỐNG PHẢI gán kết quả Vùng xám.",REQ-EU-035; S10 R5; ASM-13,FR-008,buffer_m=50
+BR-015,"KHI lô ở trạng thái Vùng xám quá 14 ngày, HỆ THỐNG PHẢI gửi cảnh báo cho Tuân thủ và Quản lý.",KPI S18,FR-010,grayzone_sla_days=14
+BR-016,"KHI Tuân thủ quyết định Đạt hoặc Loại cho lô Vùng xám, HỆ THỐNG PHẢI yêu cầu ít nhất một bằng chứng (ảnh lịch sử hoặc ảnh thực địa gắn tọa độ) và lý do.",REQ-EU-030 (Điều 11(1)),FR-010,
+BR-017,"KHI nguồn bản đồ có phiên bản mới, HỆ THỐNG PHẢI chấm lại mọi lô và lưu kết quả cũ kèm phiên bản.",REQ-EU-029 (Điều 10(4)),FR-009,
+BR-018,"KHI phát hiện mất cây che phủ mới trên lô đã Đạt, HỆ THỐNG PHẢI chuyển lô sang Vùng xám và khóa các lô hàng chưa xuất có chứa lô đó.",REQ-EU-034 (Điều 13(2)),FR-012,
+BR-020,"KHI lô không có số GCN QSDĐ và không có xác nhận UBND xã, HỆ THỐNG PHẢI gán trạng thái pháp lý Thiếu.",REQ-EU-024 (Điều 9(1)(h)),FR-005; FR-011,
+BR-021,"KHI diện tích đo từ đa giác/điểm lệch diện tích trên GCN QSDĐ quá 20%, HỆ THỐNG PHẢI gán trạng thái pháp lý Mâu thuẫn và đưa vào hàng đợi xác minh.",REQ-EU-008; SRS Rule conflicts,FR-011,area_tolerance=0.20
+BR-030,"KHI ghi giao dịch dòng EU từ lô có kết quả khác Đạt hoặc pháp lý khác Đủ, HỆ THỐNG PHẢI từ chối giao dịch.",REQ-EU-012 (Điều 4(4)),FR-013,
+BR-031,"KHI tổng khối lượng thu mua từ một lô trong niên vụ vượt diện tích × năng suất tối đa (3,5 t/ha), HỆ THỐNG PHẢI cảnh báo và yêu cầu Tuân thủ xác nhận.",REQ-EU-028 (Điều 10(2)(j)); ASM-24,FR-013,max_yield_t_ha=3.5
+BR-032,"KHI phân bổ khối lượng từ phiếu nhập vào lô hàng xuất, HỆ THỐNG PHẢI không cho tổng phân bổ vượt khối lượng còn lại của phiếu.",REQ-EU-018; REQ-EU-028,FR-014; FR-015,
+BR-033,"KHI lập lô hàng dòng EU, HỆ THỐNG PHẢI chỉ chấp nhận phiếu nhập dòng EU (mô hình tách dòng, DEC-07).",REQ-EU-028; REQ-EU-033,FR-015,
+BR-040,"KHI lập gói dữ liệu DDS, HỆ THỐNG PHẢI kiểm tra mọi lô trong lô hàng có kết quả Đạt và pháp lý Đủ; có lô không đạt thì chặn và liệt kê lô đó.",REQ-EU-012; REQ-EU-023; REQ-EU-024,FR-017,
+BR-041,"KHI sinh gói dữ liệu DDS, HỆ THỐNG PHẢI xuất GeoJSON (điểm cho lô ≤ 4 ha, đa giác cho lô > 4 ha), mã HS, khối lượng kg tịnh, nước sản xuất VN và khoảng thời gian sản xuất.",REQ-EU-020; REQ-EU-037; REQ-EU-038,FR-017; FR-018,
+BR-042,"KHI nhà nhập khẩu báo DDS bị từ chối, HỆ THỐNG PHẢI chuyển lô hàng về trạng thái Nháp kèm lý do từ chối.",REQ-EU-013,FR-019,
+BR-043,"KHI còn dưới 5 ngày tới ngày tàu dự kiến đến mà lô hàng chưa có số tham chiếu DDS, HỆ THỐNG PHẢI cảnh báo Tuân thủ và Quản lý.",REQ-EU-036 (Điều 26(4)),FR-019,dds_ref_alert_days=5
+BR-050,"HỆ THỐNG PHẢI lưu hồ sơ lô hàng, gói DDS và kết quả chấm ít nhất 5 năm kể từ ngày gửi gói và không cho xóa cứng.",REQ-EU-017; REQ-EU-032 (Điều 9(1); 12(5)),FR-020,retention_years=5
+BR-051,"KHI người dùng thêm, sửa, xóa hoặc ra quyết định trên dữ liệu nghiệp vụ, HỆ THỐNG PHẢI ghi audit gồm người, thời điểm, giá trị trước và sau.",REQ-EU-029; REQ-EU-032,FR-022,
+BR-060,"KHI ngày hiện tại trước ngày áp dụng EUDR cấu hình, HỆ THỐNG PHẢI vẫn cho lập gói DDS và ghi chú ""trước ngày áp dụng"".",REQ-EU-040 (Điều 38),FR-024,eudr_apply_date=2026-12-30

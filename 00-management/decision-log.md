@@ -71,3 +71,11 @@ Mỗi quyết định gồm: mã · bối cảnh · phương án đã xét · l�
 - **Ngày:** 2026-10-20
 - **Bối cảnh:** GFW đo "tree cover loss" (mọi cây cao > 5 m, kể cả cây trồng), khác định nghĩa "deforestation" của EUDR (Điều 2(3)–(4): chuyển **rừng** sang nông nghiệp; loại trừ đồn điền nông nghiệp).
 - **Lựa chọn:** mọi nơi dùng số GFW ghi "mất cây che phủ"; chỉ số huyện dùng để ưu tiên thu tọa độ/xác minh, không dùng để loại lô. Quyết định Đạt/Loại ở mức lô dựa trên chồng lớp với bản đồ rừng 2020 (JRC GFC2020) + mất cây che phủ sau 2020 (BR ở SRS).
+
+## DEC-07 — Mô hình chuỗi cung ứng cho dòng EU: tách dòng (segregation), không cân bằng khối lượng
+
+- **Ngày:** 2026-10-20
+- **Bối cảnh:** Điều 9(1)(d) yêu cầu tọa độ của **mọi** lô mà sản phẩm chứa; Điều 10(2)(j) coi trộn với hàng không rõ nguồn là tiêu chí rủi ro; Điều 13(1) chỉ cho thẩm định đơn giản hóa khi đã loại trừ rủi ro trộn.
+- **Phương án đã xét:** (a) bảo toàn nguồn gốc từng hộ (identity preserved); (b) tách dòng: hàng EU từ nhiều lô Đạt được trộn với nhau nhưng không trộn với hàng khác; (c) cân bằng khối lượng.
+- **Lựa chọn:** (b). Gói DDS liệt kê mọi lô đã đóng góp vào phiếu nhập dòng EU của lô hàng.
+- **Lý do:** (a) quá tốn kho với nông hộ 1 ha; (c) không bảo đảm sản phẩm thực tế chỉ chứa hàng từ lô đã khai [Unverified: cần đối chiếu FAQ/Guidance của EC về mass balance]. Câu hỏi đưa vào S20.
