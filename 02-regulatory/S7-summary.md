@@ -59,3 +59,26 @@ Mọi dòng ⛔ đều trỏ tới ít nhất một GAP (S5) và một RC (S6).
 2. Kiểm tra trên EUR-Lex xem đã có bản hợp nhất sau 2025/2650 chưa.
 3. Đọc bản gốc COM(2026) 191 (SRC-005): có đề xuất nào ảnh hưởng tới cà phê không.
 4. Xác nhận các đánh giá `vn_current_state` gắn nhãn [Inference] bằng báo cáo IDH (SRC-023) và Forest Trends (SRC-027).
+
+## 7. Sau giải pháp: 14/14 yêu cầu ⛔ đều có chức năng xử lý
+
+Mức ⛔ / ⚠️ / ✏️ ở trên mô tả **hiện trạng chuỗi cà phê VN (As-Is)**, không phải lỗi của dự án. Bảng dưới cho biết chức năng ECTS nào đáp ứng từng yêu cầu ⛔ và ở đợt nào. Truy vết đầy đủ tới test case: [S17-rtm.csv](../05-test/S17-rtm.csv) · [S17-coverage.md](../05-test/S17-coverage.md).
+
+| REQ-EU | Điều | Hiện trạng | Chức năng xử lý (đợt) |
+|---|---|---|---|
+| 003 | 3(c) | ⛔ Không có gói dữ liệu cho DDS | FR-017 (R2) |
+| 004 | 2(13) | ⛔ Không có bằng chứng hiện trạng đất tại 31/12/2020 | FR-008 (MVP) |
+| 007 | 2(28) | ⛔ Không có tọa độ lô | FR-002, FR-003, FR-004 (MVP) · FR-006 (R2) |
+| 010 | 4(2) | ⛔ Không chuyển được dữ liệu cho nhà nhập khẩu lập DDS | FR-017 (R2) |
+| 012 | 4(4) | ⛔ Hàng trộn, không tách được lô | FR-010 (MVP) · FR-013 (R2) |
+| 017 | 9(1) | ⛔ Không lưu bằng chứng theo lô hàng | FR-017, FR-020 (R2) |
+| 020 | 9(1)(d) | ⛔ Không liệt kê được mọi lô của lô hàng | FR-002, FR-003 (MVP) · FR-013, FR-017 (R2) · FR-007 (R3) |
+| 023 | 9(1)(g) | ⛔ Không có quy trình chồng lớp bản đồ rừng | FR-008 (MVP) · FR-017 (R2) |
+| 024 | 9(1)(h) | ⛔ Giấy tờ đất thiếu / không số hóa | FR-005, FR-011 (MVP) · FR-017 (R2) |
+| 027 | 10(2)(i) | ⛔ Chuỗi 4–5 tầng, mất liên kết lô | FR-013, FR-014 (R2) |
+| 028 | 10(2)(j) | ⛔ Kho trộn hàng nhiều nguồn | FR-015 (R2), mô hình tách dòng (DEC-07) |
+| 032 | 12(5) | ⛔ Không có kho hồ sơ 5 năm | FR-022 (MVP) · FR-020 (R2) |
+| 038 | Phụ lục II-3 | ⛔ DDS thiếu tọa độ mọi lô | FR-002, FR-003 (MVP) · FR-017 (R2) |
+| 040 | 38(2) | ⛔ Còn khoảng 2 tháng tới ngày áp dụng | FR-024 (MVP), tham số hóa ngày áp dụng |
+
+Các yêu cầu ⚠️ và ✏️ được xử lý qua FR tương ứng (xem cột `req_eu` trong [fr.csv](../04-solution/trace/fr.csv)) hoặc qua quyết định diễn giải (DEC-03 đến DEC-07). Hai yêu cầu nằm ngoài phạm vi có lý do: REQ-EU-014, REQ-EU-039.
