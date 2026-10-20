@@ -5,6 +5,9 @@ Scope: Robusta · Đắk Lắk (pre-2025 boundaries) · fictitious mid-size expo
 
 **[Live dashboard](https://taint7684.github.io/eudr-coffee-ba/)** · **[Clickable prototype](https://taint7684.github.io/eudr-coffee-ba/prototype/)** · **[Executive summary](07-package/S19-executive-summary.md)** · **[Case study](07-package/S19-case-study.md)**
 
+[![District risk dashboard: tree cover loss 2021–2025, risk level per district and EU export value at risk](docs/img/readme-dashboard.png)](https://taint7684.github.io/eudr-coffee-ba/)
+<sub>District risk dashboard (S9) — click to open the live version.</sub>
+
 ## Three findings
 
 1. **Missing data is the binding constraint, not deforestation.** Without plot coordinates no due diligence statement can be filed. That puts **USD 245–472 m/year** of Đắk Lắk coffee exports to the EU at risk; USD 137–264 m sits in the five high-risk districts, which hold 55.9% of the province's coffee area (2024 statistical yearbook).
@@ -25,6 +28,34 @@ flowchart LR
   G --> I[S19–S20 Package]
   H --> I
 ```
+
+## To-be process (BPMN 2.0)
+
+[![BPMN to-be process with lanes: agent, ECTS, compliance, purchasing, EU importer](04-solution/S11-bpmn/ects-to-be.png)](04-solution/S11-bpmn/bpmn-to-be.md)
+<sub>Plot registration → automated plot screening (rules R1–R6) → gray-zone verification → EU-stream purchase → DDS data package → importer files the DDS. Source: [ects-to-be.bpmn](04-solution/S11-bpmn/ects-to-be.bpmn).</sub>
+
+## Prototype
+
+<table>
+<tr>
+<td width="50%"><a href="https://taint7684.github.io/eudr-coffee-ba/prototype/#SCR02"><img src="04-solution/S15-design/screens/SCR-02-dang-ky-lo.png" alt="Plot registration on satellite imagery with geometry checks"></a><br><sub><b>SCR-02 Plot registration</b> — point or polygon, &gt; 4 ha forces a polygon, overlap and area checks</sub></td>
+<td width="50%"><a href="https://taint7684.github.io/eudr-coffee-ba/prototype/#SCR03"><img src="04-solution/S15-design/screens/SCR-03-cham-rui-ro.png" alt="Gray-zone queue with SLA and plot risk detail"></a><br><sub><b>SCR-03 Risk screening</b> — gray-zone queue with 14-day SLA, decision requires evidence</sub></td>
+</tr>
+<tr>
+<td width="50%"><a href="https://taint7684.github.io/eudr-coffee-ba/prototype/#SCR05"><img src="04-solution/S15-design/screens/SCR-05-lo-hang-dds.png" alt="Shipment allocation and DDS data package checks"></a><br><sub><b>SCR-05 Shipment &amp; DDS package</b> — EU-stream allocation, pre-checks, GeoJSON export</sub></td>
+<td width="50%"><a href="https://taint7684.github.io/eudr-coffee-ba/prototype/#SCR04"><img src="04-solution/S15-design/screens/SCR-04-thu-mua.png" alt="Purchase recording linked to plots"></a><br><sub><b>SCR-04 Purchasing</b> — EU stream locked for non-eligible plots, yield cap warning</sub></td>
+</tr>
+</table>
+
+## Business case at a glance
+
+| | A. Build | B. Rent SaaS | C. Industry consortium |
+|---|---:|---:|---:|
+| 3-year NPV, likely (USD m) | 3.46 | **4.43** | 4.04 |
+| Weighted score, exporter / farmer view | 2.95 / 3.15 | 3.65 / 3.15 | **4.30 / 4.50** |
+
+![Tornado chart: NPV sensitivity to ±20% change per parameter for option B](06-business-case/tornado.svg)
+<sub>The three parameters that move NPV most are all on the benefit side: price penalty avoided, EU share, volume. Recommendation: B now, C from 2027 ([S18](06-business-case/S18-business-case.md)).</sub>
 
 ## Deliverables
 

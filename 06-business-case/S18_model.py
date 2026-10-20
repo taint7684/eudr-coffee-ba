@@ -118,7 +118,7 @@ def svg_tornado(rows, base_npv, path):
     w, h, top, rh = 640, 30 + 26 * len(rows[:8]), 20, 26
     mn = min(min(r[1], r[2]) for r in rows[:8]); mx = max(max(r[1], r[2]) for r in rows[:8])
     sx = lambda x: 190 + (x - mn) / (mx - mn) * 420
-    g = [f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w} {h}" font-family="system-ui,Segoe UI,sans-serif" font-size="12">',
+    g = [f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w} {h}" font-family="system-ui,Segoe UI,sans-serif" font-size="12"><rect width="100%" height="100%" fill="#ffffff"/>',
          f'<line x1="{sx(base_npv):.1f}" x2="{sx(base_npv):.1f}" y1="10" y2="{h - 10}" stroke="#555" stroke-dasharray="3 3"/>']
     for i, (k, lo, hi, _) in enumerate(rows[:8]):
         y = top + i * rh
