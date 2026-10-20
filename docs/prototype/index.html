@@ -169,10 +169,10 @@ R.SCR02 = function () {
     <label class="f"><span class="req">Nông hộ</span><select id="pf">${fs.map(f => `<option value="${f.farmer_id}">${f.farmer_id} — ${f.full_name} (${f.commune_new})</option>`).join('')}</select></label>
     <label class="f"><span class="req">Diện tích khai báo (ha)</span><input id="pa" type="number" step="0.01" value="1.20"></label>
     <div class="row" style="margin-bottom:10px"><button id="mPt">Lấy điểm GPS</button><button id="mPg">Vẽ đa giác</button><button id="mClr">Xóa hình</button></div>
-    <div class="mute" id="mode">Chế độ: điểm — bấm lên bản đồ để đặt điểm (mô phỏng GPS).</div>
+    <div class="mute" id="mode">Bước 1: nhập diện tích. Bước 2: lấy điểm GPS hoặc vẽ đa giác. Bước 3: nhập giấy tờ đất. Bước 4: Lưu.</div>
     <div class="msg" id="geo" style="background:#f3f5f4"></div>
     <div class="grid2"><label class="f"><span>Loại giấy tờ</span><select id="dt"><option>GCN QSDĐ</option><option>Xác nhận UBND xã</option><option>Không có</option></select></label>
-    <label class="f"><span>Số giấy tờ</span><input id="dn" value="CS"></label></div>
+    <label class="f"><span>Số giấy tờ</span><input id="dn" placeholder="VD: CS526811"></label></div>
     <label class="f"><span>Diện tích trên giấy (ha)</span><input id="dA" type="number" step="0.01"></label>
     <label class="f"><span>Lý do lệch diện tích (khi lệch &gt; ${S.params.area_tolerance}%)</span><select id="why"><option value="">—</option><option>Đo GPS sai số</option><option>Ranh thực tế khác khai báo</option><option>Khai báo ước lượng</option></select></label>
     <div id="perr"></div><button class="p" id="ps">Lưu → Chờ chấm</button>
@@ -194,21 +194,24 @@ R.SCR02 = function () {
       const clash = S.plots.map(p => [p, overlapShare(pts, p)]).filter(x => x[1] > .10)[0];
       if (clash) { m.push(`<span class="b bad">Chồng ${Math.round(clash[1] * 100)}% lên ${clash[0].plot_id} (BR-005)</span>`); hl = L.polygon(plotLatLngs(clash[0]), {color: '#b83b2e', fillOpacity: .35}).addTo(mapObj); } }
     if (pts[0]) m.push(`Tọa độ: <span class="mono">${pts.map(p => p.map(v => v.toFixed(6)).join(', ')).slice(0, 3).join(' · ')}${pts.length > 3 ? ' …' : ''}</span> (≥ 6 chữ số thập phân, BR-001)`);
-    $('#geo').innerHTML = m.join('<br>') || 'Chưa có hình học.'; }
+    $('#mPt').classList.toggle('p', mode === 'pt'); $('#mPg').classList.toggle('p', mode === 'pg');
+    $('#geo').innerHTML = m.join('<br>') || 'Chưa có vị trí lô. Lô ≤ 4 ha: bấm <b>Lấy điểm GPS</b>. Lô &gt; 4 ha: bấm <b>Vẽ đa giác</b> rồi bấm lần lượt các đỉnh trên bản đồ.'; }
   $('#pa').oninput = () => { if (area() > 4 && mode === 'pt') { mode = 'pg'; pts = []; $('#mode').textContent = 'Chế độ: đa giác — bấm lần lượt các đỉnh trên ranh lô.'; } render(); };
-  $('#mPt').onclick = () => { mode = 'pt'; pts = []; $('#mode').textContent = 'Chế độ: điểm — bấm lên bản đồ để đặt điểm (mô phỏng GPS).'; render(); };
-  $('#mPg').onclick = () => { mode = 'pg'; pts = []; $('#mode').textContent = 'Chế độ: đa giác — bấm lần lượt các đỉnh trên ranh lô.'; render(); };
+  $('#mPt').onclick = () => { mode = 'pt'; const c = mapObj.getCenter(); pts = [[+c.lat.toFixed(6), +c.lng.toFixed(6)]];
+    $('#mode').textContent = 'Đã lấy vị trí GPS tại vườn (mô phỏng: tâm bản đồ). Bấm lên bản đồ nếu cần chỉnh lại điểm.'; render(); };
+  $('#mPg').onclick = () => { mode = 'pg'; pts = []; $('#mode').textContent = 'Chế độ đa giác: bấm lần lượt các đỉnh trên ranh lô (ít nhất 3 đỉnh), không cần bấm lại đỉnh đầu.'; render(); };
+  $('#pf').onchange = () => { const q = S.plots.find(x => x.farmer_id === $('#pf').value); if (q) mapObj.setView(plotLatLngs(q)[0], 17); pts = []; render(); };
   $('#mClr').onclick = () => { pts = []; render(); };
   mapObj.on('click', e => { const p = [+e.latlng.lat.toFixed(6), +e.latlng.lng.toFixed(6)]; if (mode === 'pt') pts = [p]; else pts.push(p); render(); });
   render();
   $('#ps').onclick = () => { const e = [], a = area();
-    if (!(a > 0)) e.push('Diện tích phải lớn hơn 0'); if (!pts.length) e.push('Chưa có hình học');
+    if (!(a > 0)) e.push('Diện tích phải lớn hơn 0'); if (!pts.length) e.push('Chưa có vị trí lô: bấm "Lấy điểm GPS" hoặc "Vẽ đa giác" rồi bấm lên bản đồ (BR-001)');
     if (a > 4 && mode !== 'pg') e.push('Lô trên 4 ha cần đa giác ranh giới (BR-002)');
     if (mode === 'pg' && pts.length < 3) e.push('Đa giác cần ít nhất 3 đỉnh (BR-003)');
     if (mode === 'pg' && pts.length > 2 && selfIntersects(pts)) e.push('Đa giác tự cắt (BR-003)');
     if (mode === 'pg' && pts.length > 2 && S.plots.some(p => overlapShare(pts, p) > .10)) e.push('Lô chồng lấn > 10% lên lô đã đăng ký (BR-005)');
     if (mode === 'pg' && pts.length > 2 && Math.abs(areaHa(pts) - a) / a * 100 > S.params.area_tolerance && !$('#why').value) e.push('Chọn lý do lệch diện tích (BR-004)');
-    if ($('#dt').value !== 'Không có' && $('#dn').value.trim().length < 3) e.push('Nhập số giấy tờ');
+    if ($('#dt').value !== 'Không có' && $('#dn').value.trim().length < 3) e.push('Nhập số giấy tờ, hoặc chọn Loại giấy tờ = "Không có" (lô sẽ ở trạng thái pháp lý Thiếu)');
     if (e.length) { $('#perr').innerHTML = e.map(x => `<div class="msg err">${x}</div>`).join(''); return; }
     const f = byId(S.farmers, 'farmer_id', $('#pf').value), id = 'LO-' + String(S.plots.length + 1).padStart(5, '0');
     const geom = mode === 'pt' ? {type: 'Point', coordinates: [pts[0][1], pts[0][0]]} : {type: 'Polygon', coordinates: [[...pts, pts[0]].map(p => [p[1], p[0]])]};
@@ -268,12 +271,13 @@ R.SCR04 = function () {
     <label class="f"><span class="req">Lô</span><select id="tp"></select></label><div id="tinfo"></div>
     <div class="grid2"><label class="f"><span class="req">Ngày</span><input id="td" type="date" value="2026-12-08"></label><label class="f"><span class="req">Khối lượng (kg)</span><input id="tk" type="number" value="1500"></label></div>
     <label class="f"><span class="req">Dòng</span><select id="ts"><option>EU</option><option>Khác</option></select></label>
-    <div id="terr"></div><button class="p" id="tsave" ${S.role === 'Đại lý' ? '' : 'disabled title="Chỉ Đại lý ghi giao dịch"'}>Lưu giao dịch</button></div>
+    <div id="terr"></div><button class="p" id="tsave" ${S.role === 'Đại lý' ? '' : 'disabled'}>Lưu giao dịch</button>${S.role === 'Đại lý' ? '' : '<div class="mute" style="margin-top:6px">Chỉ vai trò Đại lý ghi giao dịch. Đổi vai trò ở thanh bên trái để thử.</div>'}</div>
   <div class="card"><h1 style="font-size:15px">Lập phiếu nhập kho DN</h1>
     <label class="f"><span class="req">Đại lý</span><select id="ra">${AG.map(a => `<option value="${a.id}">${a.id} — ${a.name}</option>`).join('')}</select></label>
     <div id="rinfo" class="mute"></div><button class="p" id="rsave" ${S.role === 'Thu mua' ? '' : 'disabled title="Chỉ Thu mua lập phiếu nhập"'}>Lập phiếu nhập dòng EU</button>
     <h1 style="font-size:15px;margin-top:16px">Phiếu nhập</h1><div class="tw" style="max-height:220px"><table><tr><th>Phiếu</th><th>Đại lý</th><th>Dòng</th><th>Tổng (kg)</th><th>Còn lại (kg)</th></tr>${S.receipts.map(r => `<tr><td class="mono">${r.id}</td><td>${r.agent}</td><td>${r.stream}</td><td>${fmt(r.total)}</td><td>${fmt(r.remaining)}</td></tr>`).join('')}</table></div></div></div>
-  <div class="card"><h1 style="font-size:15px">Giao dịch gần nhất</h1><div class="tw" style="max-height:300px"><table><tr><th>Mã</th><th>Ngày</th><th>Lô</th><th>Nông hộ</th><th>Đại lý</th><th>kg</th><th>Dòng</th><th>Phiếu nhập</th></tr>${rec.map(t => `<tr><td class="mono">${t.txn_id}</td><td>${d2(t.txn_date)}</td><td class="mono">${t.plot_id}</td><td>${byId(S.farmers, 'farmer_id', t.farmer_id).full_name}</td><td>${t.agent_id}</td><td>${fmt(t.net_kg)}</td><td>${t.stream}</td><td class="mono">${t.receipt || '—'}</td></tr>`).join('')}</table></div></div>`;
+  ${S.role === 'Tuân thủ' ? `<div class="card"><h1 style="font-size:15px">Giao dịch vượt sản lượng chờ xác nhận (BR-031)</h1>${S.txns.filter(x => x.pending).length ? `<table><tr><th>Mã</th><th>Lô</th><th>kg</th><th></th></tr>${S.txns.filter(x => x.pending).map(x => `<tr><td class="mono">${x.txn_id}</td><td class="mono">${x.plot_id}</td><td>${fmt(x.net_kg)}</td><td><button data-ok="${x.txn_id}">Xác nhận</button> <button data-no="${x.txn_id}">Chuyển dòng Khác</button></td></tr>`).join('')}</table>` : '<p class="mute">Không có giao dịch chờ xác nhận.</p>'}</div>` : ''}
+  <div class="card"><h1 style="font-size:15px">Giao dịch gần nhất</h1><div class="tw" style="max-height:300px"><table><tr><th>Mã</th><th>Ngày</th><th>Lô</th><th>Nông hộ</th><th>Đại lý</th><th>kg</th><th>Dòng</th><th>Phiếu nhập</th></tr>${rec.map(t => `<tr><td class="mono">${t.txn_id}</td><td>${d2(t.txn_date)}</td><td class="mono">${t.plot_id}</td><td>${byId(S.farmers, 'farmer_id', t.farmer_id).full_name}</td><td>${t.agent_id}</td><td>${fmt(t.net_kg)}</td><td>${t.stream}</td><td class="mono">${t.pending ? '<span class="b warn">Chờ xác nhận</span>' : (t.receipt || '—')}</td></tr>`).join('')}</table></div></div>`;
   const sold = pid => S.txns.filter(t => t.plot_id === pid && t.season === '2026/27').reduce((s, t) => s + t.net_kg, 0);
   function plotsOf() { const ps = S.plots.filter(p => p.farmer_id === $('#tf').value); $('#tp').innerHTML = ps.map(p => `<option value="${p.plot_id}">${p.plot_id} · ${(+p.area_declared_ha).toFixed(2)} ha · ${p.risk_status}/${p.legal_status}</option>`).join(''); info(); }
   function info() { const p = byId(S.plots, 'plot_id', $('#tp').value); if (!p) return; const cap = p.area_declared_ha * S.params.max_yield_t_ha * 1000, s = sold(p.plot_id);
@@ -289,6 +293,8 @@ R.SCR04 = function () {
     modal(`${over ? '<div class="msg warn">Vượt sản lượng tối đa của lô — giao dịch chờ Tuân thủ xác nhận (BR-031).</div>' : '<div class="msg ok">Đã lưu giao dịch ' + id + '.</div>'}<button onclick="closeModal();go('SCR04')">Đóng</button>`); };
   const rinfo = () => { const t = S.txns.filter(x => x.agent_id === $('#ra').value && x.stream === 'EU' && !x.receipt && !x.pending); $('#rinfo').textContent = `${t.length} giao dịch dòng EU chưa nhập kho · ${fmt(t.reduce((s, x) => s + x.net_kg, 0))} kg`; return t; };
   $('#ra').onchange = rinfo; rinfo();
+  document.querySelectorAll('[data-ok]').forEach(bt => bt.onclick = () => { const x = byId(S.txns, 'txn_id', bt.dataset.ok); x.pending = false; log('Giao dịch', x.txn_id, 'Xác nhận vượt sản lượng', 'Chờ xác nhận', 'Đã xác nhận'); go('SCR04'); });
+  document.querySelectorAll('[data-no]').forEach(bt => bt.onclick = () => { const x = byId(S.txns, 'txn_id', bt.dataset.no); x.pending = false; x.stream = 'Khác'; log('Giao dịch', x.txn_id, 'Từ chối dòng EU', 'EU', 'Khác'); go('SCR04'); });
   $('#rsave').onclick = () => { const t = rinfo(); if (!t.length) return modal('<div class="msg err">Không có giao dịch dòng EU chờ nhập kho.</div><button onclick="closeModal()">Đóng</button>');
     const id = 'PN-' + String(S.receipts.length + 1).padStart(4, '0'), kg = t.reduce((s, x) => s + x.net_kg, 0); t.forEach(x => x.receipt = id);
     S.receipts.push({id, agent: $('#ra').value, date: '2026-12-08', stream: 'EU', total: kg, remaining: kg, txns: t.map(x => x.txn_id)}); log('Phiếu nhập', id, 'Tạo', '', fmt(kg) + ' kg'); go('SCR04'); };
