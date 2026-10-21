@@ -4,43 +4,71 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>EUDR-Ready Coffee — Rủi ro mất cây che phủ Đắk Lắk</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
-:root{--bg:#f6f7f5;--card:#fff;--ink:#1d2321;--mute:#5f6b66;--line:#e3e7e4;--acc:#2f6f4f;--hi:#b83b2e;--mid:#d99a2b;--lo:#6f9f7a;--na:#c9cfcb}
-@media (prefers-color-scheme:dark){:root{--bg:#121614;--card:#1b201e;--ink:#e8ece9;--mute:#9aa6a0;--line:#2c3330;--acc:#6fbf94;--na:#3a423e}}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
-header{padding:28px 16px 8px;max-width:1180px;margin:auto}
-h1{font-size:24px;margin:0 0 4px;font-weight:650}h2{font-size:16px;margin:0 0 12px;font-weight:600}
-.sub{color:var(--mute);margin:0}.wrap{max-width:1180px;margin:auto;padding:8px 16px 40px}
-nav a{color:var(--acc);text-decoration:none;margin-right:16px;font-weight:550}
-.grid{display:grid;gap:16px}.k4{grid-template-columns:repeat(4,1fr)}.c2{grid-template-columns:3fr 2fr}.c2b{grid-template-columns:1fr 1fr}
-@media (max-width:860px){.k4{grid-template-columns:1fr 1fr}.c2,.c2b{grid-template-columns:1fr}}
-.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px}
-.kpi .v{font-size:26px;font-weight:650;letter-spacing:-.01em}.kpi .l{color:var(--mute);font-size:13px}
-#map{height:430px;border-radius:8px}
-.legend span{display:inline-flex;align-items:center;margin-right:14px;font-size:13px;color:var(--mute)}
-.legend i{width:12px;height:12px;border-radius:3px;margin-right:6px;display:inline-block}
-table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:right}
-th:first-child,td:first-child{text-align:left}th{color:var(--mute);font-weight:550;font-size:12.5px}
-.pill{padding:2px 8px;border-radius:99px;font-size:12px;color:#fff}
-.tools{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}select{padding:5px 8px;border-radius:6px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
-svg text{fill:var(--mute);font-size:11px}.note{color:var(--mute);font-size:13px}
-footer{color:var(--mute);font-size:12.5px;max-width:1180px;margin:auto;padding:0 16px 40px}
-.tbl{overflow-x:auto}
+/* Nen trang, mot mau nhan xanh la; the bo goc 14px, bong mem */
+:root{--bg:#ffffff;--soft:#f6f8f7;--card:#ffffff;--ink:#14201b;--mute:#5b6b64;--line:#e6ebe8;--acc:#1f7a55;--acc-soft:#e8f4ee;
+--hi:#d9473a;--mid:#e3a33a;--lo:#3f9b6e;--na:#d3dad6;--shadow:0 1px 2px rgba(16,24,40,.04),0 6px 20px rgba(16,24,40,.05)}
+*{box-sizing:border-box}html{color-scheme:light}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 "Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+.topbar{position:sticky;top:0;z-index:1000;background:rgba(255,255,255,.92);backdrop-filter:saturate(1.4) blur(8px);border-bottom:1px solid var(--line)}
+.topbar .in{max-width:1200px;margin:auto;display:flex;align-items:center;gap:18px;flex-wrap:wrap;padding:12px 16px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;color:var(--ink);text-decoration:none;font-size:15px}
+.logo i{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#2a9a6a,#1f7a55);display:grid;place-items:center;color:#fff;font-style:normal;font-size:15px;font-weight:700}
+nav{display:flex;gap:4px;margin-left:auto;flex-wrap:wrap}
+nav a{color:var(--mute);text-decoration:none;font-weight:500;font-size:14px;padding:7px 12px;border-radius:9px}
+nav a:hover{background:var(--soft);color:var(--ink)}nav a.on{background:var(--acc-soft);color:var(--acc)}
+header{max-width:1200px;margin:auto;padding:30px 16px 6px}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font:500 12px "JetBrains Mono",ui-monospace,monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--acc);background:var(--acc-soft);padding:4px 10px;border-radius:99px}
+h1{font-size:clamp(24px,3.2vw,32px);line-height:1.2;margin:12px 0 8px;font-weight:700;letter-spacing:-.015em;max-width:30ch;text-wrap:balance}
+h2{font-size:15.5px;margin:0 0 14px;font-weight:600}
+.sub{color:var(--mute);margin:0;max-width:70ch}
+.wrap{max-width:1200px;margin:auto;padding:16px 16px 48px}
+.grid{display:grid;gap:18px}.k4{grid-template-columns:repeat(4,1fr)}.c2{grid-template-columns:3fr 2fr}.c2b{grid-template-columns:1fr 1fr}
+@media (max-width:900px){.k4{grid-template-columns:1fr 1fr}.c2,.c2b{grid-template-columns:1fr}nav{margin-left:0}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:var(--shadow);min-width:0}
+.kpi{position:relative;overflow:hidden}
+.kpi::before{content:"";position:absolute;inset:0 auto 0 0;width:4px;background:var(--acc)}
+.kpi:nth-child(3)::before{background:var(--mid)}.kpi:nth-child(4)::before{background:var(--hi)}
+.kpi .v{font-size:28px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums}.kpi .l{color:var(--mute);font-size:13.5px}
+#map{height:440px;border-radius:10px;border:1px solid var(--line)}
+.legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:12px}
+.legend span{display:inline-flex;align-items:center;font-size:13px;color:var(--mute)}
+.legend i{width:12px;height:12px;border-radius:4px;margin-right:7px;display:inline-block}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:12px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{padding:10px 12px;border-bottom:1px solid var(--line);text-align:right;font-variant-numeric:tabular-nums}
+tr:last-child td{border-bottom:0}tr:hover td{background:#fbfcfb}
+th:first-child,td:first-child{text-align:left}
+th{color:var(--mute);font-weight:600;font-size:12.5px;background:var(--soft)}
+#var table th,#var table td{padding:9px 6px;white-space:nowrap}#var table td:first-child{white-space:normal}
+.pill{display:inline-block;padding:3px 10px;border-radius:99px;font-size:12px;font-weight:600;color:#fff}
+.tools{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:14px;font-size:14px;color:var(--mute)}
+select{font:inherit;padding:7px 10px;border-radius:9px;border:1px solid var(--line);background:#fff;color:var(--ink);margin-left:6px}
+select:focus-visible,a:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+svg text{fill:var(--mute);font-size:11px;font-family:"Be Vietnam Pro",system-ui,sans-serif}
+.note{color:var(--mute);font-size:13.5px}
+footer{color:var(--mute);font-size:12.5px;max-width:1200px;margin:auto;padding:16px 16px 40px;border-top:1px solid var(--line)}
+footer a{color:var(--acc)}
 </style>
 </head>
 <body>
+<div class="topbar"><div class="in">
+  <a class="logo" href="./"><i>E</i>EUDR-Ready Coffee</a>
+  <nav><a class="on" href="./">Dashboard rủi ro</a><a href="prototype/">Prototype ECTS</a><a href="https://github.com/taint7684/eudr-coffee-ba">GitHub</a></nav>
+</div></div>
 <header>
-  <nav><a href="./">Dashboard rủi ro</a><a href="prototype/">Prototype ECTS</a><a href="https://github.com/taint7684/eudr-coffee-ba">GitHub</a></nav>
-  <h1 style="margin-top:14px">Rủi ro mất cây che phủ theo huyện — Đắk Lắk (ranh giới trước 07/2025)</h1>
-  <p class="sub">Chỉ số sàng lọc phục vụ ưu tiên thu tọa độ và xác minh lô cà phê theo EUDR. Không phải kết luận phá rừng.</p>
+  <span class="eyebrow">Đắk Lắk · ranh giới trước 07/2025</span>
+  <h1>Rủi ro mất cây che phủ theo huyện</h1>
+  <p class="sub">Chỉ số sàng lọc để ưu tiên thu tọa độ và xác minh lô cà phê theo EUDR. Đây không phải kết luận phá rừng.</p>
 </header>
 <div class="wrap">
   <section class="grid k4" id="kpis"></section>
 
   <section class="grid c2" style="margin-top:16px">
     <div class="card"><h2>Mức rủi ro theo huyện (2021–2025)</h2><div id="map"></div>
-      <div class="legend" style="margin-top:8px"><span><i style="background:var(--hi)"></i>Cao</span><span><i style="background:var(--mid)"></i>Trung bình</span><span><i style="background:var(--lo)"></i>Thấp</span></div></div>
+      <div class="legend"><span><i style="background:var(--hi)"></i>Cao</span><span><i style="background:var(--mid)"></i>Trung bình</span><span><i style="background:var(--lo)"></i>Thấp</span></div></div>
     <div class="card"><h2>Giá trị xuất khẩu sang EU bị đe dọa (USD/năm)</h2><div id="var"></div>
       <p class="note">Lăng kính 1: thiếu tọa độ thì không lập được DDS, nên toàn bộ phần EU bị chặn. Lăng kính 2: phần nằm ở 5 huyện rủi ro Cao, chiếm 55,9% diện tích cà phê (niên giám 2024).</p></div>
   </section>
